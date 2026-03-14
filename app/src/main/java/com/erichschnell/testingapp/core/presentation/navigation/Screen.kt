@@ -1,4 +1,4 @@
-package com.erichschnell.testingapp.presentation.navigation
+package com.erichschnell.testingapp.core.presentation.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
