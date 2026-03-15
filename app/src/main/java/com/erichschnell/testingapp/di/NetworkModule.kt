@@ -4,6 +4,8 @@ import com.erichschnell.testingapp.BuildConfig
 import com.erichschnell.testingapp.productList.data.remote.MiniMarketApiService
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -15,6 +17,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
 
