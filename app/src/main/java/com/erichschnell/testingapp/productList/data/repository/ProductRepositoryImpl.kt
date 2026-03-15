@@ -1,5 +1,6 @@
 package com.erichschnell.testingapp.productList.data.repository
 
+import com.erichschnell.testingapp.productList.data.remote.RemoteDataSource
 import com.erichschnell.testingapp.productList.domain.models.Product
 import com.erichschnell.testingapp.productList.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
@@ -7,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ProductRepositoryImpl @Inject constructor(): ProductRepository{
+class ProductRepositoryImpl @Inject constructor(private val remoteDataSource: RemoteDataSource): ProductRepository{
     override fun getProducts(): Flow<List<Product>> {
         TODO("Not yet implemented")
     }
@@ -17,6 +18,6 @@ class ProductRepositoryImpl @Inject constructor(): ProductRepository{
     }
 
     override suspend fun refreshProduct() {
-
+        remoteDataSource.getProducts()
     }
 }
