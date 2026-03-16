@@ -1,14 +1,12 @@
 package com.erichschnell.testingapp.productList.presentation
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -26,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.erichschnell.testingapp.productList.presentation.components.FiltersMenu
+import com.erichschnell.testingapp.productList.presentation.components.HomeTopAppBar
 import com.erichschnell.testingapp.productList.presentation.components.ProductListEmpty
 import com.erichschnell.testingapp.productList.presentation.components.ProductListItems
 import com.erichschnell.testingapp.productList.presentation.models.ProductListEvent
@@ -36,7 +35,10 @@ fun ProductListScreen(
     viewModel: ProductListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val showFilters by viewModel.showFilters.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+
+
 
     LaunchedEffect(Unit) {
         viewModel.events.collect {event ->
@@ -47,7 +49,14 @@ fun ProductListScreen(
         }
     }
 
-    Scaffold( snackbarHost = { SnackbarHost(snackbarHostState) } ) { padding ->
+    Scaffold(
+        topBar = { HomeTopAppBar(
+            filtersVisible = showFilters,
+            onFilterClick = { viewModel.onEvent(ProductListEvent.ButtonClick.ShowFilters(it)) },
+            onSettingsSelected = {}
+        ) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
 
         when(val state = uiState) {
             ProductListUiState.Loading -> {
@@ -58,8 +67,12 @@ fun ProductListScreen(
             }
             is ProductListUiState.Success -> {
                 SuccessContent(
-                    modifier = Modifier.fillMaxSize().padding(padding),
-                    state = state
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    state = state,
+                    showFilters = showFilters,
+                    onEvent = viewModel::onEvent
                 )
             }
         }
@@ -84,15 +97,19 @@ private fun ErrorContent(modifier: Modifier = Modifier, error:String) {
 @Composable
 private fun SuccessContent(
     modifier: Modifier = Modifier,
-    state:ProductListUiState.Success,
-    onEvent: (ProductListEvent) -> Unit = {}
+    state: ProductListUiState.Success,
+    showFilters: Boolean,
+    onEvent: (ProductListEvent) -> Unit,
 ) {
     Column (modifier){
-        FiltersMenu(
-            state = state,
-            onCategorySelected = { onEvent(ProductListEvent.ButtonClick.FilterBy(it)) },
-            onSortSelected = { onEvent(ProductListEvent.ButtonClick.SortedBy(it)) }
-        )
+        AnimatedVisibility(visible = showFilters) {
+            FiltersMenu(
+                state = state,
+                onCategorySelected = { onEvent(ProductListEvent.ButtonClick.FilterBy(it)) },
+                onSortSelected = { onEvent(ProductListEvent.ButtonClick.SortedBy(it)) }
+            )
+        }
+
 
         Text(
             "${state.products.size} productos",

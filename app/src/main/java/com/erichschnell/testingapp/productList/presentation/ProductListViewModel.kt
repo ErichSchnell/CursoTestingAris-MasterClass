@@ -24,6 +24,10 @@ class ProductListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
+    private val _showFilters = MutableStateFlow(false)
+    val showFilters = _showFilters.asStateFlow()
+
+
     private val _events = MutableSharedFlow<ProductListEvent>(extraBufferCapacity = 1)
     val events = _events.asSharedFlow()
 
@@ -55,6 +59,7 @@ class ProductListViewModel @Inject constructor(
         when(event){
             is ProductListEvent.ButtonClick.FilterBy -> setFilter(event.value, state)
             is ProductListEvent.ButtonClick.SortedBy -> setSort(event.value, state)
+            is ProductListEvent.ButtonClick.ShowFilters -> _showFilters.value = event.value
             else -> {}
         }
     }

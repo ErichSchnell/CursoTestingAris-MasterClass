@@ -11,5 +11,6 @@ sealed class ProductListEvent() {
     sealed class ButtonClick() {
         data class FilterBy(val value: String?) : ProductListEvent()
         data class SortedBy(val value: SortOption) : ProductListEvent()
+        data class ShowFilters(val value: Boolean) : ProductListEvent()
     }
 }
