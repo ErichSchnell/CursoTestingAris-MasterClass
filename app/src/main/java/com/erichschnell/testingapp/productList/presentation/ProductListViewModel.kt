@@ -1,8 +1,8 @@
 package com.erichschnell.testingapp.productList.presentation
 
-import android.util.Log.e
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.erichschnell.testingapp.productList.domain.models.SortOption
 import com.erichschnell.testingapp.productList.domain.usecases.GetProductsUseCase
 import com.erichschnell.testingapp.productList.presentation.models.ProductListEvent
 import com.erichschnell.testingapp.productList.presentation.models.ProductListUiState
@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,11 +35,36 @@ class ProductListViewModel @Inject constructor(
         _uiState.value = ProductListUiState.Loading
         getProductsUseCase()
             .onEach { products ->
-                _uiState.value = ProductListUiState.Success(products)
+                val categories = products.map { it.category }.distinct().sorted()
+                _uiState.value = ProductListUiState.Success(
+                    products = products,
+                    categories = categories,
+                    selectedCategory = null,
+                    sortOption = SortOption.NONE
+                )
             }
             .catch {
                 _uiState.value = ProductListUiState.Error(it.message ?: "Unknown error")
             }
             .launchIn(viewModelScope)
     }
+
+    fun onEvent(event: ProductListEvent){
+        val state = uiState.value as? ProductListUiState.Success ?: return
+
+        when(event){
+            is ProductListEvent.ButtonClick.FilterBy -> setFilter(event.value, state)
+            is ProductListEvent.ButtonClick.SortedBy -> setSort(event.value, state)
+            else -> {}
+        }
+    }
+
+    private fun setFilter(category: String?, state: ProductListUiState.Success) {
+        _uiState.value = state.copy(selectedCategory = category)
+    }
+
+    private fun setSort(sort: SortOption, state: ProductListUiState.Success) {
+        _uiState.value = state.copy(sortOption = sort)
+    }
+
 }

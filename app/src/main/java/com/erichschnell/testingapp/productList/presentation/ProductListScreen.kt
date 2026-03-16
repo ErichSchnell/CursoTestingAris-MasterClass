@@ -25,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.erichschnell.testingapp.productList.presentation.components.FiltersMenu
+import com.erichschnell.testingapp.productList.presentation.components.ProductListEmpty
+import com.erichschnell.testingapp.productList.presentation.components.ProductListItems
 import com.erichschnell.testingapp.productList.presentation.models.ProductListEvent
 import com.erichschnell.testingapp.productList.presentation.models.ProductListUiState
 
@@ -38,7 +41,8 @@ fun ProductListScreen(
     LaunchedEffect(Unit) {
         viewModel.events.collect {event ->
             when(event){
-                is ProductListEvent.showMessage -> snackbarHostState.showSnackbar(event.message)
+                is ProductListEvent.Message.show -> snackbarHostState.showSnackbar(event.value)
+                else -> {}
             }
         }
     }
@@ -84,14 +88,20 @@ private fun SuccessContent(
     onEvent: (ProductListEvent) -> Unit = {}
 ) {
     Column (modifier){
-        LazyColumn {
-            items(state.products) {product ->
-                Box(Modifier.fillMaxWidth().height(50.dp).background(Color.Red),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(product.name)
-                }
-            }
+        FiltersMenu(
+            state = state,
+            onCategorySelected = { onEvent(ProductListEvent.ButtonClick.FilterBy(it)) },
+            onSortSelected = { onEvent(ProductListEvent.ButtonClick.SortedBy(it)) }
+        )
+
+        Text(
+            "${state.products.size} productos",
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+        )
+        if (state.products.isEmpty()){
+            ProductListEmpty()
+        } else {
+            ProductListItems(state.products)
         }
     }
 }

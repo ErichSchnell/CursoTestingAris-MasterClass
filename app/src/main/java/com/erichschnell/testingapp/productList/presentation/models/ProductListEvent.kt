@@ -1,5 +1,15 @@
 package com.erichschnell.testingapp.productList.presentation.models
 
-sealed interface ProductListEvent {
-    data class showMessage(val message: String): ProductListEvent
+import com.erichschnell.testingapp.productList.domain.models.SortOption
+
+sealed class ProductListEvent() {
+
+    sealed class Message() {
+        data class show(val value: String) : ProductListEvent()
+    }
+
+    sealed class ButtonClick() {
+        data class FilterBy(val value: String?) : ProductListEvent()
+        data class SortedBy(val value: SortOption) : ProductListEvent()
+    }
 }
