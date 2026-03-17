@@ -1,8 +1,6 @@
 package com.erichschnell.testingapp.productList.presentation
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,7 +30,8 @@ import com.erichschnell.testingapp.productList.presentation.models.ProductListUi
 
 @Composable
 fun ProductListScreen(
-    viewModel: ProductListViewModel = hiltViewModel()
+    viewModel: ProductListViewModel = hiltViewModel(),
+    navigateToSettings: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val showFilters by viewModel.showFilters.collectAsStateWithLifecycle()
@@ -53,7 +52,7 @@ fun ProductListScreen(
         topBar = { HomeTopAppBar(
             filtersVisible = showFilters,
             onFilterClick = { viewModel.onEvent(ProductListEvent.ButtonClick.ShowFilters(it)) },
-            onSettingsSelected = {}
+            onSettingsSelected = {navigateToSettings()}
         ) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
