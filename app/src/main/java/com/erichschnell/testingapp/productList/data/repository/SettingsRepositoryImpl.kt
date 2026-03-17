@@ -36,7 +36,7 @@ class SettingsRepositoryImpl @Inject constructor(
             }
         }
 
-    override val inStock: Flow<Boolean> = dataStoreFlow.map { it[IN_STOCK_ONLY_KEY] ?: false }
+    override val inStockOnly: Flow<Boolean> = dataStoreFlow.map { it[IN_STOCK_ONLY_KEY] ?: false }
     override val selectedCaregory: Flow<String?> = dataStoreFlow.map { it[SELECT_CATEGORY_KEY] }
     override val filtersVisible: Flow<Boolean> = dataStoreFlow.map { it[FILTERS_VISIBLE_KEY] ?: true }
 

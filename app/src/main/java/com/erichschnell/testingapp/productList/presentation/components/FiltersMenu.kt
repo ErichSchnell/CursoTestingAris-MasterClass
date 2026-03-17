@@ -21,6 +21,7 @@ import com.erichschnell.testingapp.productList.domain.models.SortOption
 import com.erichschnell.testingapp.productList.domain.models.SortOption.DISCOUNT
 import com.erichschnell.testingapp.productList.domain.models.SortOption.NONE
 import com.erichschnell.testingapp.productList.domain.models.SortOption.PRICE_ASC
+import com.erichschnell.testingapp.productList.domain.models.SortOption.PRICE_DESC
 import com.erichschnell.testingapp.productList.presentation.models.ProductListUiState
 
 @Composable
@@ -68,13 +69,13 @@ fun FiltersMenu(
                     label = { Text("Precio ↑", style = MaterialTheme.typography.labelSmall) }
                 )
                 FilterChip(
-                    selected = state.sortOption == SortOption.PRICE_DESC,
-                    onClick = { onSortSelected(DISCOUNT) },
+                    selected = state.sortOption == PRICE_DESC,
+                    onClick = { onSortSelected(PRICE_DESC) },
                     label = { Text("Precio ↓", style = MaterialTheme.typography.labelSmall) }
                 )
                 FilterChip(
                     selected = state.sortOption == DISCOUNT,
-                    onClick = { onSortSelected(NONE) },
+                    onClick = { onSortSelected(DISCOUNT) },
                     label = { Text("Descuento ↑↓", style = MaterialTheme.typography.labelSmall) }
                 )
             }

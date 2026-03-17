@@ -5,7 +5,7 @@ import com.erichschnell.testingapp.productList.domain.models.SortOption
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
-    val inStock: Flow<Boolean>
+    val inStockOnly: Flow<Boolean>
     val themeMode: Flow<ThemeMode>
     val selectedCaregory: Flow<String?>
     val filtersVisible: Flow<Boolean>
