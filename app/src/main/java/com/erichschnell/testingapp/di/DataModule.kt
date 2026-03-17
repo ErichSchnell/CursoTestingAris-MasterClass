@@ -9,7 +9,9 @@ import com.erichschnell.testingapp.productList.data.local.database.dao.ProductDa
 import com.erichschnell.testingapp.productList.data.local.database.dao.PromotionDao
 import com.erichschnell.testingapp.productList.data.remote.MiniMarketApiService
 import com.erichschnell.testingapp.productList.data.repository.ProductRepositoryImpl
+import com.erichschnell.testingapp.productList.data.repository.PromotionRepositoryImpl
 import com.erichschnell.testingapp.productList.domain.repository.ProductRepository
+import com.erichschnell.testingapp.productList.domain.repository.PromotionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,6 +34,13 @@ object DataModule {
     @Singleton
     fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository {
         return productRepositoryImpl
+    }
+
+
+    @Provides
+    @Singleton
+    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository {
+        return promotionRepositoryImpl
     }
 
     @Provides

@@ -10,6 +10,6 @@ interface MiniMarketApiService {
     @GET("data/products.json")
     suspend fun getProducts(): ProductsResponse
 
-    @GET("data/promotion.json")
+    @GET("data/promotions.json")
     suspend fun getPromotions(): PromotionsResponse
 }

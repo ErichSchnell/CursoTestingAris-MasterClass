@@ -39,7 +39,7 @@ class ProductListViewModel @Inject constructor(
         _uiState.value = ProductListUiState.Loading
         getProductsUseCase()
             .onEach { products ->
-                val categories = products.map { it.category }.distinct().sorted()
+                val categories = products.map { it.product.category }.distinct().sorted()
                 _uiState.value = ProductListUiState.Success(
                     products = products,
                     categories = categories,
@@ -60,6 +60,7 @@ class ProductListViewModel @Inject constructor(
             is ProductListEvent.ButtonClick.FilterBy -> setFilter(event.value, state)
             is ProductListEvent.ButtonClick.SortedBy -> setSort(event.value, state)
             is ProductListEvent.ButtonClick.ShowFilters -> _showFilters.value = event.value
+            is ProductListEvent.ButtonClick.ClickProdcut -> {}
             else -> {}
         }
     }

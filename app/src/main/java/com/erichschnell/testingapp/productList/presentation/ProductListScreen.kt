@@ -118,7 +118,9 @@ private fun SuccessContent(
         if (state.products.isEmpty()){
             ProductListEmpty()
         } else {
-            ProductListItems(state.products)
+            ProductListItems(state.products){
+                onEvent(ProductListEvent.ButtonClick.ClickProdcut(it))
+            }
         }
     }
 }

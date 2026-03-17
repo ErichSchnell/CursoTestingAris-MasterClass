@@ -8,14 +8,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,11 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.erichschnell.testingapp.R
-import com.erichschnell.testingapp.productList.domain.models.Product
+import com.erichschnell.testingapp.productList.domain.models.ProductPromotion
+import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotion
 import java.util.Locale
 
 @Composable
@@ -57,18 +57,30 @@ fun ProductListEmpty(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProductListItems(products: List<Product>) {
+fun ProductListItems(
+    products: List<ProductWithPromotion>,
+    onClick: (ProductWithPromotion) -> Unit
+) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)){
         items(products) {product ->
             ProductItem(product){
-
+                onClick(product)
             }
         }
     }
 }
 
 @Composable
-private fun ProductItem(product: Product, onClick: () -> Unit) {
+private fun ProductItem(item: ProductWithPromotion, onClick: () -> Unit) {
+
+    val product = item.product
+    val promotion = item.promotion
+    val promoBadge = when(promotion){
+        is ProductPromotion.BuyXPayY -> promotion.label
+        is ProductPromotion.Percent -> promotion.label
+        null -> null
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,7 +103,7 @@ private fun ProductItem(product: Product, onClick: () -> Unit) {
                     .clip(RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                if (!product.imageUrl.isNullOrBlank()){
+                if (!item.product.imageUrl.isNullOrBlank()){
                     AsyncImage(
                         model = product.imageUrl,
                         placeholder = painterResource(R.drawable.ic_launcher_foreground),
@@ -105,6 +117,25 @@ private fun ProductItem(product: Product, onClick: () -> Unit) {
                         contentDescription = product.name,
                         modifier = Modifier.size(33.dp)
                     )
+                }
+
+                if (promoBadge != null) {
+                    Box(
+                        modifier = Modifier.align(Alignment.TopStart)
+                            .padding(16.dp)
+                            .background(
+                                MaterialTheme.colorScheme.error,
+                                RoundedCornerShape(4.dp)
+                            )
+                            .padding(horizontal = 6.dp, 2.dp),
+                    ) {
+                        Text(
+                            promoBadge,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
             Column(
@@ -133,8 +164,42 @@ private fun ProductItem(product: Product, onClick: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if(!true){
-
+                    if(promotion is ProductPromotion.Percent){
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text(
+                                    "Antes",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = String.format(Locale.getDefault(), "%.2f", product.price),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textDecoration = TextDecoration.LineThrough
+                                )
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text(
+                                    "Ahora",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = String.format(Locale.getDefault(), "%.2f", promotion.discountedPrice),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        }
                     } else {
                         Text(
                             text = String.format(Locale.getDefault(), "%.2f", product.price),

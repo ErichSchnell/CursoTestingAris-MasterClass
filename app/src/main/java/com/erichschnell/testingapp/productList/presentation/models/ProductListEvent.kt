@@ -1,5 +1,6 @@
 package com.erichschnell.testingapp.productList.presentation.models
 
+import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.productList.domain.models.SortOption
 
 sealed class ProductListEvent() {
@@ -12,5 +13,7 @@ sealed class ProductListEvent() {
         data class FilterBy(val value: String?) : ProductListEvent()
         data class SortedBy(val value: SortOption) : ProductListEvent()
         data class ShowFilters(val value: Boolean) : ProductListEvent()
+        data class ClickProdcut(val value: ProductWithPromotion) : ProductListEvent()
+
     }
 }
