@@ -1,6 +1,9 @@
 package com.erichschnell.testingapp.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.erichschnell.testingapp.core.data.DefaultDispatchersProvider
 import com.erichschnell.testingapp.core.domain.coroutines.DispatchersProvider
@@ -10,8 +13,10 @@ import com.erichschnell.testingapp.productList.data.local.database.dao.Promotion
 import com.erichschnell.testingapp.productList.data.remote.MiniMarketApiService
 import com.erichschnell.testingapp.productList.data.repository.ProductRepositoryImpl
 import com.erichschnell.testingapp.productList.data.repository.PromotionRepositoryImpl
+import com.erichschnell.testingapp.productList.data.repository.SettingsRepositoryImpl
 import com.erichschnell.testingapp.productList.domain.repository.ProductRepository
 import com.erichschnell.testingapp.productList.domain.repository.PromotionRepository
+import com.erichschnell.testingapp.productList.domain.repository.SettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +24,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import kotlin.jvm.java
+
+private val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -61,5 +68,17 @@ object DataModule {
             klass = MiniMarketDataBase::class.java,
             name = "minimarket_database"
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return context.datastore
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository {
+        return settingsRepositoryImpl
     }
 }
