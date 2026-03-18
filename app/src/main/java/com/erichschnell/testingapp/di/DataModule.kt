@@ -5,9 +5,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
+import com.erichschnell.testingapp.cart.data.local.database.dao.CartItemDao
+import com.erichschnell.testingapp.cart.data.repository.CartItemRepositoryImpl
+import com.erichschnell.testingapp.cart.domain.repository.CartItemRepository
 import com.erichschnell.testingapp.core.data.DefaultDispatchersProvider
 import com.erichschnell.testingapp.core.domain.coroutines.DispatchersProvider
-import com.erichschnell.testingapp.productList.data.local.database.MiniMarketDataBase
+import com.erichschnell.testingapp.core.data.local.database.MiniMarketDataBase
 import com.erichschnell.testingapp.productList.data.local.database.dao.ProductDao
 import com.erichschnell.testingapp.productList.data.local.database.dao.PromotionDao
 import com.erichschnell.testingapp.productList.data.remote.MiniMarketApiService
@@ -61,6 +64,11 @@ object DataModule {
     }
 
     @Provides
+    fun providesCartItemDao(database: MiniMarketDataBase): CartItemDao {
+        return database.cartItemDao()
+    }
+
+    @Provides
     @Singleton
     fun providesDatabase(@ApplicationContext context: Context): MiniMarketDataBase{
         return Room.databaseBuilder(
@@ -80,5 +88,11 @@ object DataModule {
     @Singleton
     fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository {
         return settingsRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideCartItemRepository(cartItemRepositoryImpl: CartItemRepositoryImpl): CartItemRepository {
+        return cartItemRepositoryImpl
     }
 }
