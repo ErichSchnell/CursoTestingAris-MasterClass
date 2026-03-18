@@ -16,4 +16,8 @@ sealed class ProductListEvent() {
         data class ClickProdcut(val value: ProductWithPromotion) : ProductListEvent()
 
     }
+
+    sealed class Navigate() {
+        data class ProductDetail(val id: String) : ProductListEvent()
+    }
 }

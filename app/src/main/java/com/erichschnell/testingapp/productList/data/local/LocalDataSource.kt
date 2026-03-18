@@ -15,6 +15,5 @@ class LocalDataSource @Inject constructor(
     suspend fun saveProducts(products: List<ProductEntity>) = productDao.replaceAll(products)
 
     fun getAllPromotions() = promotionDao.getAllPromotions()
-//    fun getProductById(id: String) = productDao.getProductById(id)
     suspend fun savePromotions ( promotions: List<PromotionEntity>) = promotionDao.replaceAll(promotions)
 }

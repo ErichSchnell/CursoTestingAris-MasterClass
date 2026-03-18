@@ -31,7 +31,8 @@ import com.erichschnell.testingapp.productList.presentation.models.ProductListUi
 @Composable
 fun ProductListScreen(
     viewModel: ProductListViewModel = hiltViewModel(),
-    navigateToSettings: () -> Unit
+    navigateToSettings: () -> Unit,
+    navigateToProductDetail: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val showFilters by viewModel.showFilters.collectAsStateWithLifecycle()
@@ -43,6 +44,7 @@ fun ProductListScreen(
         viewModel.events.collect {event ->
             when(event){
                 is ProductListEvent.Message.show -> snackbarHostState.showSnackbar(event.value)
+                is ProductListEvent.Navigate.ProductDetail -> navigateToProductDetail(event.id)
                 else -> {}
             }
         }

@@ -50,7 +50,9 @@ class ProductRepositoryImpl @Inject constructor(
     }
 
     override fun getProductById(id: String): Flow<Product?> {
-        TODO("Not yet implemented")
+        return localDataSource.getProductById(id)
+            .map { it?.toDomain() }
+            .catch { }
     }
 
     override suspend fun refreshProduct() {

@@ -101,8 +101,14 @@ class ProductListViewModel @Inject constructor(
             is ProductListEvent.ButtonClick.FilterBy -> setCategory(event.value)
             is ProductListEvent.ButtonClick.SortedBy -> setSort(event.value)
             is ProductListEvent.ButtonClick.ShowFilters -> setShowFilters(event.value)
-            is ProductListEvent.ButtonClick.ClickProdcut -> {}
+            is ProductListEvent.ButtonClick.ClickProdcut -> navigateToProductDetail(event.value.product.id)
             else -> {}
+        }
+    }
+
+    private fun navigateToProductDetail(id: String) {
+        viewModelScope.launch {
+            _events.emit(ProductListEvent.Navigate.ProductDetail(id))
         }
     }
 
