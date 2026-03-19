@@ -16,11 +16,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -43,9 +46,30 @@ fun ProductDetailScreen(
     onBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
 
     LaunchedEffect(productId) {
         viewModel.loadProduct(productId)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect {
+            when(it){
+                ProductDetailEvent.Toast.InsufficientStock -> {
+                    snackbarHostState.showSnackbar("No hay suficiente stock")
+                }
+                ProductDetailEvent.Toast.NetworkError -> {
+                    snackbarHostState.showSnackbar("Error de red")
+                }
+                ProductDetailEvent.Toast.NotFoundError -> {
+                    snackbarHostState.showSnackbar("Ocurrio un error inesperado")
+                }
+                is ProductDetailEvent.Toast.AddProductSuccess -> {
+                    snackbarHostState.showSnackbar("Producto agregado al carrito")
+                }
+            }
+        }
     }
 
     Scaffold(
@@ -61,7 +85,8 @@ fun ProductDetailScreen(
                 isLoading = uiState.isLoading,
                 addToCart = viewModel::addToCart
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddings ->
         Column(
             Modifier
@@ -82,7 +107,8 @@ fun ProductDetailScreen(
                     }
 
                     Column(
-                        Modifier.fillMaxSize()
+                        Modifier
+                            .fillMaxSize()
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {

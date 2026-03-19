@@ -6,6 +6,8 @@ import com.erichschnell.testingapp.productList.data.local.database.dao.ProductDa
 import com.erichschnell.testingapp.productList.data.local.database.dao.PromotionDao
 import com.erichschnell.testingapp.productList.data.local.database.entity.ProductEntity
 import com.erichschnell.testingapp.productList.data.local.database.entity.PromotionEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(
@@ -14,6 +16,10 @@ class LocalDataSource @Inject constructor(
     private val cartItemDao: CartItemDao,
 ) {
     fun getAllProducts() = productDao.getAllProducts()
+    fun getProductsByIds(ids: Set<String>): Flow<List<ProductEntity>> {
+        if (ids.isEmpty()) return flowOf(emptyList())
+        return productDao.getProductsByIds(ids.toList())
+    }
     fun getProductById(id: String) = productDao.getProductById(id)
     suspend fun saveProducts(products: List<ProductEntity>) = productDao.replaceAll(products)
 

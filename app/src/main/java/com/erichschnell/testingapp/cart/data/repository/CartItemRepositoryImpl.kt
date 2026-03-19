@@ -7,7 +7,9 @@ import com.erichschnell.testingapp.cart.domain.models.CartItem
 import com.erichschnell.testingapp.cart.domain.repository.CartItemRepository
 import com.erichschnell.testingapp.core.domain.model.AppError
 import com.erichschnell.testingapp.productList.data.local.LocalDataSource
+import com.erichschnell.testingapp.productList.data.mappers.toDomain
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -16,6 +18,10 @@ class CartItemRepositoryImpl @Inject constructor(
 ): CartItemRepository {
     override fun getCartItems(): Flow<List<CartItem>> = localDataSource.getllCartItems()
         .map { cartItems -> cartItems.map { it.toDomain() } }
+
+    override suspend fun getCartItemById(productId: String): CartItem? {
+        return localDataSource.getCartItemById(productId)?.toDomain()
+    }
 
     override suspend fun addToCart(productId: String, quantity: Int) {
         val existingItems = localDataSource.getCartItemById(productId)

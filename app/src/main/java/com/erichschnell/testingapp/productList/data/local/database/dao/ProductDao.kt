@@ -13,6 +13,9 @@ interface ProductDao {
     @Query("SELECT * FROM products")
     fun getAllProducts(): Flow<List<ProductEntity>>
 
+    @Query("SELECT * FROM products WHERE id IN (:ids)")
+    fun getProductsByIds(ids: List<String>): Flow<List<ProductEntity>>
+
     @Query("SELECT * FROM products WHERE id = :id")
     fun getProductById(id: String): Flow<ProductEntity?>
 

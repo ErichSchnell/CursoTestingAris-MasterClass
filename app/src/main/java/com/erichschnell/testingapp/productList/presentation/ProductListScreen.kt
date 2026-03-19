@@ -32,6 +32,7 @@ import com.erichschnell.testingapp.productList.presentation.models.ProductListUi
 fun ProductListScreen(
     viewModel: ProductListViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
+    navigateToCart: () -> Unit,
     navigateToProductDetail: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -54,7 +55,8 @@ fun ProductListScreen(
         topBar = { HomeTopAppBar(
             filtersVisible = showFilters,
             onFilterClick = { viewModel.onEvent(ProductListEvent.ButtonClick.ShowFilters(it)) },
-            onSettingsSelected = {navigateToSettings()}
+            onSettingsSelected = {navigateToSettings()},
+            onCartSelected = {navigateToCart()}
         ) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
