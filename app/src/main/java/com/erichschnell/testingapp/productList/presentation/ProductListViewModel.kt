@@ -7,6 +7,7 @@ import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotio
 import com.erichschnell.testingapp.productList.domain.models.SortOption
 import com.erichschnell.testingapp.productList.domain.repository.SettingsRepository
 import com.erichschnell.testingapp.productList.domain.usecases.GetProductsUseCase
+import com.erichschnell.testingapp.productList.presentation.models.ProductListAction
 import com.erichschnell.testingapp.productList.presentation.models.ProductListEvent
 import com.erichschnell.testingapp.productList.presentation.models.ProductListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -94,15 +95,12 @@ class ProductListViewModel @Inject constructor(
         .launchIn(viewModelScope)
     }
 
-    fun onEvent(event: ProductListEvent){
-        val state = uiState.value as? ProductListUiState.Success ?: return
-
+    fun onAction(event: ProductListAction){
         when(event){
-            is ProductListEvent.ButtonClick.FilterBy -> setCategory(event.value)
-            is ProductListEvent.ButtonClick.SortedBy -> setSort(event.value)
-            is ProductListEvent.ButtonClick.ShowFilters -> setShowFilters(event.value)
-            is ProductListEvent.ButtonClick.ClickProdcut -> navigateToProductDetail(event.value.product.id)
-            else -> {}
+            is ProductListAction.FilterBy -> setCategory(event.value)
+            is ProductListAction.SortedBy -> setSort(event.value)
+            is ProductListAction.ShowFilters -> setShowFilters(event.value)
+            is ProductListAction.ClickProdcut -> navigateToProductDetail(event.value.product.id)
         }
     }
 

@@ -27,6 +27,7 @@ import com.erichschnell.testingapp.productList.presentation.components.FiltersMe
 import com.erichschnell.testingapp.productList.presentation.components.HomeTopAppBar
 import com.erichschnell.testingapp.productList.presentation.components.ProductListEmpty
 import com.erichschnell.testingapp.productList.presentation.components.ProductListItems
+import com.erichschnell.testingapp.productList.presentation.models.ProductListAction
 import com.erichschnell.testingapp.productList.presentation.models.ProductListEvent
 import com.erichschnell.testingapp.productList.presentation.models.ProductListUiState
 
@@ -49,9 +50,8 @@ fun ProductListScreen(
     LaunchedEffect(Unit) {
         productListViewModel.events.collect { event ->
             when(event){
-                is ProductListEvent.Message.show -> snackbarHostState.showSnackbar(event.value)
+                is ProductListEvent.Message.Text -> snackbarHostState.showSnackbar(event.value)
                 is ProductListEvent.Navigate.ProductDetail -> navigateToProductDetail(event.id)
-                else -> {}
             }
         }
     }
@@ -69,7 +69,7 @@ fun ProductListScreen(
         topBar = { HomeTopAppBar(
             filtersVisible = showFilters,
             cartItemCount = cartItemCout,
-            onFilterClick = { productListViewModel.onEvent(ProductListEvent.ButtonClick.ShowFilters(it)) },
+            onFilterClick = { productListViewModel.onAction(ProductListAction.ShowFilters(it)) },
             onSettingsSelected = {navigateToSettings()},
             onCartSelected = {navigateToCart()}
         ) },
@@ -90,7 +90,7 @@ fun ProductListScreen(
                         .padding(padding),
                     state = state,
                     showFilters = showFilters,
-                    onEvent = productListViewModel::onEvent
+                    onAction = productListViewModel::onAction
                 )
             }
         }
@@ -117,14 +117,14 @@ private fun SuccessContent(
     modifier: Modifier = Modifier,
     state: ProductListUiState.Success,
     showFilters: Boolean,
-    onEvent: (ProductListEvent) -> Unit,
+    onAction: (ProductListAction) -> Unit,
 ) {
     Column (modifier){
         AnimatedVisibility(visible = showFilters) {
             FiltersMenu(
                 state = state,
-                onCategorySelected = { onEvent(ProductListEvent.ButtonClick.FilterBy(it)) },
-                onSortSelected = { onEvent(ProductListEvent.ButtonClick.SortedBy(it)) }
+                onCategorySelected = { onAction(ProductListAction.FilterBy(it)) },
+                onSortSelected = { onAction(ProductListAction.SortedBy(it)) }
             )
         }
 
@@ -137,7 +137,7 @@ private fun SuccessContent(
             ProductListEmpty()
         } else {
             ProductListItems(state.products){
-                onEvent(ProductListEvent.ButtonClick.ClickProdcut(it))
+                onAction(ProductListAction.ClickProdcut(it))
             }
         }
     }
