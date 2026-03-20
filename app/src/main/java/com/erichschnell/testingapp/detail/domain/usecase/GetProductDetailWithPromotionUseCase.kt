@@ -1,5 +1,6 @@
 package com.erichschnell.testingapp.detail.domain.usecase
 
+import com.erichschnell.testingapp.cart.domain.ex.activeAt
 import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.productList.domain.repository.ProductRepository
 import com.erichschnell.testingapp.productList.domain.repository.PromotionRepository
@@ -19,11 +20,7 @@ class GetProductDetailWithPromotionUseCase @Inject constructor(
             productRepository.getProductById(productId),
             promotionRepository.getActivePromotions()
         ) { product, promotions ->
-
-            val now = Instant.now()
-            val activePromotions = promotions.filter {
-                it.startTime <= now && it.endTime >= now
-            }
+            val activePromotions = promotions.activeAt(Instant.now())
 
             product?.let {
                 val finalPromotion = getPromotionForProduct(it, activePromotions)

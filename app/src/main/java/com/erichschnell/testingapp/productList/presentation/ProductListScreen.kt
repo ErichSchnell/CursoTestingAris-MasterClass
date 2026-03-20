@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.erichschnell.testingapp.cart.presentation.CartViewModel
+import com.erichschnell.testingapp.cart.presentation.model.CartUiState
 import com.erichschnell.testingapp.productList.presentation.components.FiltersMenu
 import com.erichschnell.testingapp.productList.presentation.components.HomeTopAppBar
 import com.erichschnell.testingapp.productList.presentation.components.ProductListEmpty
@@ -30,19 +32,22 @@ import com.erichschnell.testingapp.productList.presentation.models.ProductListUi
 
 @Composable
 fun ProductListScreen(
-    viewModel: ProductListViewModel = hiltViewModel(),
+    productListViewModel: ProductListViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
     navigateToCart: () -> Unit,
     navigateToProductDetail: (String) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val showFilters by viewModel.showFilters.collectAsStateWithLifecycle()
+    val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
+    val cartUiState by cartViewModel.uiState.collectAsStateWithLifecycle()
+
+    val showFilters by productListViewModel.showFilters.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
 
 
     LaunchedEffect(Unit) {
-        viewModel.events.collect {event ->
+        productListViewModel.events.collect { event ->
             when(event){
                 is ProductListEvent.Message.show -> snackbarHostState.showSnackbar(event.value)
                 is ProductListEvent.Navigate.ProductDetail -> navigateToProductDetail(event.id)
@@ -51,10 +56,20 @@ fun ProductListScreen(
         }
     }
 
+    val cartItemCout = remember(cartUiState) {
+        when(val state = cartUiState) {
+            is CartUiState.Success -> {
+                state.cartItems.sumOf { it.cartItem.quantity }
+            }
+            else -> 0
+        }
+    }
+
     Scaffold(
         topBar = { HomeTopAppBar(
             filtersVisible = showFilters,
-            onFilterClick = { viewModel.onEvent(ProductListEvent.ButtonClick.ShowFilters(it)) },
+            cartItemCount = cartItemCout,
+            onFilterClick = { productListViewModel.onEvent(ProductListEvent.ButtonClick.ShowFilters(it)) },
             onSettingsSelected = {navigateToSettings()},
             onCartSelected = {navigateToCart()}
         ) },
@@ -75,7 +90,7 @@ fun ProductListScreen(
                         .padding(padding),
                     state = state,
                     showFilters = showFilters,
-                    onEvent = viewModel::onEvent
+                    onEvent = productListViewModel::onEvent
                 )
             }
         }

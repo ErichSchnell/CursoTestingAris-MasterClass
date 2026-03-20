@@ -1,5 +1,6 @@
 package com.erichschnell.testingapp.productList.domain.usecases
 
+import com.erichschnell.testingapp.cart.domain.ex.activeAt
 import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.productList.domain.repository.ProductRepository
 import com.erichschnell.testingapp.productList.domain.repository.PromotionRepository
@@ -22,10 +23,7 @@ class GetProductsUseCase @Inject constructor(
             settingsRepository.inStockOnly
         ) { products, promotions, inStockOnly ->
 
-            val now = Instant.now()
-            val activePromotions = promotions.filter { it.startTime <= now &&
-                it.endTime >= now
-            }
+            val activePromotions = promotions.activeAt(Instant.now())
 
             val filteredProducts = if (inStockOnly) {
                 products.filter { it.stock > 0 }

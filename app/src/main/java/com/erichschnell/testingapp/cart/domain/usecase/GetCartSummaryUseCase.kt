@@ -1,5 +1,6 @@
 package com.erichschnell.testingapp.cart.domain.usecase
 
+import com.erichschnell.testingapp.cart.domain.ex.activeAt
 import com.erichschnell.testingapp.cart.domain.models.CartItem
 import com.erichschnell.testingapp.cart.domain.models.CartSummary
 import com.erichschnell.testingapp.cart.domain.repository.CartItemRepository
@@ -46,8 +47,7 @@ class GetCartSummaryUseCase @Inject constructor(
         products: List<Product>,
         promotions: List<Promotion>
     ): CartSummary{
-        val now = Instant.now()
-        val activePromotions = promotions.filter { it.startTime <= now && it.endTime >= now }
+        val activePromotions = promotions.activeAt(Instant.now())
 
         val productsById = products.associateBy { it.id }
         var subtotal = 0.0

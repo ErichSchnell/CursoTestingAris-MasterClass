@@ -8,4 +8,8 @@ sealed interface CartEvent {
         data class DecreaseQuantity(val productId: String, val quantity: Int) : CartEvent
 
     }
+
+    data object Action {
+        data class RemoveCartItem(val productId: String) : CartEvent
+    }
 }
