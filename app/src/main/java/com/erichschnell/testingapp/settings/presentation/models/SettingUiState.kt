@@ -4,5 +4,6 @@ import com.erichschnell.testingapp.core.domain.model.ThemeMode
 
 data class SettingUiState (
     val inStockOnly: Boolean = false,
+    val showTaxes: Boolean = false,
     val themeMode: ThemeMode = ThemeMode.SYSTEM
 )

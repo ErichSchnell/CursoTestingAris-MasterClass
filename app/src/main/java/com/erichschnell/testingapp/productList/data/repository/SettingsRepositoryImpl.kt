@@ -22,6 +22,7 @@ class SettingsRepositoryImpl @Inject constructor(
 
     companion object {
         val IN_STOCK_ONLY_KEY = booleanPreferencesKey("IN_STOCK_ONLY_KEY")
+        val SHOW_TAXES_KEY = booleanPreferencesKey("SHOW_TAXES_KEY")
         val FILTERS_VISIBLE_KEY = booleanPreferencesKey("FILTERS_VISIBLE_KEY")
         val SELECT_CATEGORY_KEY = stringPreferencesKey("SELECT_CATEGORY_KEY")
         val THEME_MODE_KEY = intPreferencesKey("THEME_MODE_KEY")
@@ -37,6 +38,9 @@ class SettingsRepositoryImpl @Inject constructor(
         }
 
     override val inStockOnly: Flow<Boolean> = dataStoreFlow.map { it[IN_STOCK_ONLY_KEY] ?: false }
+
+    override val showTaxes: Flow<Boolean> = dataStoreFlow.map { it[SHOW_TAXES_KEY] ?: false }
+
     override val selectedCaregory: Flow<String?> = dataStoreFlow.map { it[SELECT_CATEGORY_KEY] }
     override val filtersVisible: Flow<Boolean> = dataStoreFlow.map { it[FILTERS_VISIBLE_KEY] ?: true }
 
@@ -58,6 +62,11 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun setInStockOnly(value: Boolean) {
         dataStore.edit { it[IN_STOCK_ONLY_KEY] = value }
     }
+
+    override suspend fun setShowTaxes(value: Boolean) {
+        dataStore.edit { it[SHOW_TAXES_KEY] = value }
+    }
+
     override suspend fun setSelectedCaregory(value: String?) {
         dataStore.edit {
             if (value == null) {

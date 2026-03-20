@@ -1,7 +1,5 @@
 package com.erichschnell.testingapp.settings.presentation
 
-import android.transition.TransitionManager.go
-import android.widget.Space
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +24,6 @@ import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,8 +32,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.erichschnell.testingapp.core.domain.model.ThemeMode
 import com.erichschnell.testingapp.core.presentation.components.MarketTopAppBar
+import com.erichschnell.testingapp.settings.presentation.components.CategorySettingCard
+import com.erichschnell.testingapp.settings.presentation.components.RowSettingSwitch
+import com.erichschnell.testingapp.settings.presentation.models.SettingUiAction
+import com.erichschnell.testingapp.settings.presentation.models.SettingUiState
 
 @Composable
 fun SettingScreen(
@@ -48,160 +50,110 @@ fun SettingScreen(
     Scaffold(
         topBar = { MarketTopAppBar(title = "Ajustes", onBackSelected = { onBack() }) }
     ) { paddings ->
+        SuccessContent(
+            modifier = Modifier.fillMaxSize().padding(paddings).padding(16.dp),
+            state = uiState,
+            onAction = viewModel::onAction
+        )
+    }
+}
+
+@Composable
+fun SuccessContent(
+    modifier: Modifier = Modifier,
+    state: SettingUiState,
+    onAction: (SettingUiAction) -> Unit
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        FiltersAndVisualization(
+            showInStock = state.inStockOnly,
+            onShowInStockChange = { onAction(SettingUiAction.SetInStockOnly(it)) },
+            showTaxes = state.showTaxes,
+            onShowTaxesChange = { onAction(SettingUiAction.SetShowTaxes(it)) }
+        )
+        SettingThemeApp(
+            themeSelected = state.themeMode,
+            onThemeSelected = { onAction(SettingUiAction.SetThemeMode(it)) }
+        )
+    }
+}
+
+@Composable
+private fun FiltersAndVisualization(
+    modifier: Modifier = Modifier,
+    showInStock: Boolean,
+    onShowInStockChange: (Boolean) -> Unit,
+    showTaxes: Boolean,
+    onShowTaxesChange: (Boolean) -> Unit
+) {
+    CategorySettingCard(
+        modifier = modifier,
+        icon = Icons.Default.Info,
+        title = "Filtros y visualización"
+    ) {
+        RowSettingSwitch(
+            title = "Solo productos en Stock",
+            description = "Muestrame únicamente productos disponibles",
+            checked = showInStock,
+            onCheckedChange = onShowInStockChange
+        )
+        RowSettingSwitch(
+            title = "Mostrar impuestos incluídos",
+            description = "Incluir impuestos en los precios mostrados",
+            checked = showTaxes,
+            onCheckedChange = onShowTaxesChange
+        )
+    }
+}
+
+@Composable
+fun SettingThemeApp(modifier: Modifier = Modifier, themeSelected: ThemeMode, onThemeSelected: (ThemeMode) -> Unit) {
+
+    CategorySettingCard(
+        modifier = modifier,
+        icon = Icons.Default.DarkMode,
+        title = "Apariencia"
+    ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddings)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                shape = RoundedCornerShape(16.dp)
+            Text(
+                "Tema de la aplicación",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium
+            )
+            Text(
+                "Elige entre modo claro, oscuro y sistema",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+
+            )
+            Spacer(Modifier.height(4.dp))
+
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
-                    Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Info,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
-                        )
-
-                        Text(
-                            "Filtros y visualización",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    HorizontalDivider()
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(
-                                "Solo productos en Stock",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
-                            )
-                            Text(
-                                "Muestrame únicamente productos disponibles",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-
-                            )
-                        }
-
-                        Switch(
-                            checked = uiState.inStockOnly,
-                            onCheckedChange = { viewModel.setInStockOnly(it) }
-                        )
-                    }
-                    HorizontalDivider()
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(
-                                "Mostrar impuestos incluídos",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
-                            )
-                            Text(
-                                "Incluir impuestos en los precios mostrados",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-
-                            )
-                        }
-
-                        Switch(checked = true, onCheckedChange = {})
-                    }
-                    HorizontalDivider()
-                }
-            }
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Column(
-                    Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.DarkMode,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(24.dp)
-                        )
-
-                        Text(
-                            "Apariencia",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    HorizontalDivider()
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            "Tema de la aplicación",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Text(
-                            "Elige entre modo claro, oscuro y sistema",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-
-                        )
-                        Spacer(Modifier.height(4.dp))
-
-                        SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            SegmentedButton(
-                                shape = SegmentedButtonDefaults.itemShape(0,3),
-                                onClick = { viewModel.setThemeMode(ThemeMode.SYSTEM) },
-                                selected = uiState.themeMode == ThemeMode.SYSTEM,
-                                label = { Text("Sistema") },
-                            )
-                            SegmentedButton(
-                                shape = SegmentedButtonDefaults.itemShape(1,3),
-                                onClick = { viewModel.setThemeMode(ThemeMode.LIGHT) },
-                                selected = uiState.themeMode == ThemeMode.LIGHT,
-                                label = { Text("Claro") },
-                            )
-                            SegmentedButton(
-                                shape = SegmentedButtonDefaults.itemShape(2,3),
-                                onClick = { viewModel.setThemeMode(ThemeMode.DARK) },
-                                selected = uiState.themeMode == ThemeMode.DARK,
-                                label = { Text("Oscuro") },
-                            )
-                        }
-                    }
-
-                }
+                SegmentedButton(
+                    shape = SegmentedButtonDefaults.itemShape(0,3),
+                    onClick = { onThemeSelected(ThemeMode.SYSTEM) },
+                    selected = themeSelected == ThemeMode.SYSTEM,
+                    label = { Text("Sistema") },
+                )
+                SegmentedButton(
+                    shape = SegmentedButtonDefaults.itemShape(1,3),
+                    onClick = { onThemeSelected(ThemeMode.LIGHT) },
+                    selected = themeSelected == ThemeMode.LIGHT,
+                    label = { Text("Claro") },
+                )
+                SegmentedButton(
+                    shape = SegmentedButtonDefaults.itemShape(2,3),
+                    onClick = { onThemeSelected(ThemeMode.DARK) },
+                    selected = themeSelected == ThemeMode.DARK,
+                    label = { Text("Oscuro") },
+                )
             }
         }
     }

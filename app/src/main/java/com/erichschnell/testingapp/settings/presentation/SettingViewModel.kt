@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.erichschnell.testingapp.core.domain.model.ThemeMode
 import com.erichschnell.testingapp.productList.domain.repository.SettingsRepository
+import com.erichschnell.testingapp.settings.presentation.models.SettingUiAction
 import com.erichschnell.testingapp.settings.presentation.models.SettingUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,20 +29,34 @@ class SettingViewModel @Inject constructor(
     private fun loadSettings() {
         combine(
             settingsRepository.inStockOnly,
-            settingsRepository.themeMode
-        ) { inStockOnly, themeMode ->
+            settingsRepository.themeMode,
+            settingsRepository.showTaxes
+        ) { inStockOnly, themeMode, showTaxes ->
             _uiState.value = SettingUiState(
                 inStockOnly = inStockOnly,
+                showTaxes = showTaxes,
                 themeMode = themeMode
             )
         }.launchIn(viewModelScope)
     }
 
-    fun setInStockOnly(state: Boolean) {
+    fun onAction(event: SettingUiAction){
+        when(event){
+            is SettingUiAction.SetInStockOnly -> setInStockOnly(event.state)
+            is SettingUiAction.SetShowTaxes -> setShowTaxes(event.state)
+            is SettingUiAction.SetThemeMode -> setThemeMode(event.themeMode)
+        }
+    }
+
+    private fun setInStockOnly(state: Boolean) {
         viewModelScope.launch { settingsRepository.setInStockOnly(state) }
     }
 
-    fun setThemeMode(themeMode: ThemeMode) {
+    private fun setShowTaxes(state: Boolean) {
+        viewModelScope.launch { settingsRepository.setShowTaxes(state) }
+    }
+
+    private fun setThemeMode(themeMode: ThemeMode) {
         viewModelScope.launch { settingsRepository.setThemeMode(themeMode) }
     }
 
