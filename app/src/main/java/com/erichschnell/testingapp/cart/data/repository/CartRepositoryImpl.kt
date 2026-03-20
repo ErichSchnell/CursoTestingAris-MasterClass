@@ -1,21 +1,18 @@
 package com.erichschnell.testingapp.cart.data.repository
 
-import com.erichschnell.testingapp.cart.data.local.database.entity.CartItemEntity
 import com.erichschnell.testingapp.cart.data.mappers.toDomain
 import com.erichschnell.testingapp.cart.data.mappers.toEntity
 import com.erichschnell.testingapp.cart.domain.models.CartItem
-import com.erichschnell.testingapp.cart.domain.repository.CartItemRepository
+import com.erichschnell.testingapp.cart.domain.repository.CartRepository
 import com.erichschnell.testingapp.core.domain.model.AppError
 import com.erichschnell.testingapp.productList.data.local.LocalDataSource
-import com.erichschnell.testingapp.productList.data.mappers.toDomain
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class CartItemRepositoryImpl @Inject constructor(
+class CartRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource
-): CartItemRepository {
+): CartRepository {
     override fun getCartItems(): Flow<List<CartItem>> = localDataSource.getllCartItems()
         .map { cartItems -> cartItems.map { it.toDomain() } }
 

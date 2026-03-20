@@ -34,18 +34,15 @@ import com.erichschnell.testingapp.productList.presentation.models.ProductListUi
 @Composable
 fun ProductListScreen(
     productListViewModel: ProductListViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
     navigateToCart: () -> Unit,
     navigateToProductDetail: (String) -> Unit
 ) {
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
-    val cartUiState by cartViewModel.uiState.collectAsStateWithLifecycle()
-
     val showFilters by productListViewModel.showFilters.collectAsStateWithLifecycle()
+    val cartItemCout by productListViewModel.cartItemCout.collectAsStateWithLifecycle()
+
     val snackbarHostState = remember { SnackbarHostState() }
-
-
 
     LaunchedEffect(Unit) {
         productListViewModel.events.collect { event ->
@@ -53,15 +50,6 @@ fun ProductListScreen(
                 is ProductListEvent.Message.Text -> snackbarHostState.showSnackbar(event.value)
                 is ProductListEvent.Navigate.ProductDetail -> navigateToProductDetail(event.id)
             }
-        }
-    }
-
-    val cartItemCout = remember(cartUiState) {
-        when(val state = cartUiState) {
-            is CartUiState.Success -> {
-                state.cartItems.sumOf { it.cartItem.quantity }
-            }
-            else -> 0
         }
     }
 
@@ -94,7 +82,6 @@ fun ProductListScreen(
                 )
             }
         }
-
     }
 }
 

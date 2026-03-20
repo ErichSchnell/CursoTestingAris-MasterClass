@@ -1,16 +1,13 @@
 package com.erichschnell.testingapp.cart.presentation
 
-import android.util.Log.e
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.erichschnell.testingapp.cart.domain.repository.CartItemRepository
+import com.erichschnell.testingapp.cart.domain.repository.CartRepository
 import com.erichschnell.testingapp.cart.domain.usecase.GetCartItemsWithPromotionsUseCase
 import com.erichschnell.testingapp.cart.domain.usecase.GetCartSummaryUseCase
 import com.erichschnell.testingapp.cart.domain.usecase.UpdateCartItemUseCase
 import com.erichschnell.testingapp.cart.presentation.model.CartEvent
-import com.erichschnell.testingapp.cart.presentation.model.CartItemWithPromotion
 import com.erichschnell.testingapp.cart.presentation.model.CartUiState
-import com.erichschnell.testingapp.productList.domain.repository.ProductRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -20,16 +17,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val cartItemRepository: CartItemRepository,
+    private val cartRepository: CartRepository,
     private val getCartSummaryUseCase: GetCartSummaryUseCase,
     private val updateCartItemUseCase: UpdateCartItemUseCase,
     private val getCartItemsWithPromotionsUseCase: GetCartItemsWithPromotionsUseCase,
@@ -86,7 +81,7 @@ class CartViewModel @Inject constructor(
     fun removeFromCart(productId: String) {
         viewModelScope.launch {
             try {
-                cartItemRepository.removeCartItem(productId)
+                cartRepository.removeCartItem(productId)
             } catch (e: Exception){
                 _events.emit(CartEvent.ShowMessage(e.message.orEmpty()))
             }

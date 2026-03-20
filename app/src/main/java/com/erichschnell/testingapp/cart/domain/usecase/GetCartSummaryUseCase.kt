@@ -3,7 +3,7 @@ package com.erichschnell.testingapp.cart.domain.usecase
 import com.erichschnell.testingapp.cart.domain.ex.activeAt
 import com.erichschnell.testingapp.cart.domain.models.CartItem
 import com.erichschnell.testingapp.cart.domain.models.CartSummary
-import com.erichschnell.testingapp.cart.domain.repository.CartItemRepository
+import com.erichschnell.testingapp.cart.domain.repository.CartRepository
 import com.erichschnell.testingapp.productList.domain.models.Product
 import com.erichschnell.testingapp.productList.domain.models.ProductPromotion
 import com.erichschnell.testingapp.productList.domain.models.Promotion
@@ -19,7 +19,7 @@ import java.time.Instant
 import javax.inject.Inject
 
 class GetCartSummaryUseCase @Inject constructor(
-    private val cartItemRepository: CartItemRepository,
+    private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
     private val promotionRepository: PromotionRepository,
     private val getPromotionForProductUseCase: GetPromotionForProduct
@@ -27,7 +27,7 @@ class GetCartSummaryUseCase @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<CartSummary> {
 
-        return cartItemRepository.getCartItems()
+        return cartRepository.getCartItems()
             .flatMapLatest { cartItems ->
                 val ids = cartItems.mapTo(mutableSetOf()) { it.productId }
                 if (ids.isEmpty()) flowOf(CartSummary(0.0,0.0,0.0))

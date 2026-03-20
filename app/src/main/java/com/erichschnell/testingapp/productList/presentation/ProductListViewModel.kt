@@ -6,6 +6,7 @@ import com.erichschnell.testingapp.productList.domain.models.ProductPromotion
 import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.productList.domain.models.SortOption
 import com.erichschnell.testingapp.productList.domain.repository.SettingsRepository
+import com.erichschnell.testingapp.productList.domain.usecases.GetCartItemsQuantityUseCase
 import com.erichschnell.testingapp.productList.domain.usecases.GetProductsUseCase
 import com.erichschnell.testingapp.productList.presentation.models.ProductListAction
 import com.erichschnell.testingapp.productList.presentation.models.ProductListEvent
@@ -29,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val getCartItemsQuantityUseCase: GetCartItemsQuantityUseCase,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
@@ -41,6 +43,12 @@ class ProductListViewModel @Inject constructor(
     val showFilters: StateFlow<Boolean> = settingsRepository.filtersVisible.stateIn(
         scope = viewModelScope,
         initialValue = true,
+        started = SharingStarted.WhileSubscribed(5000)
+    )
+
+    val cartItemCout = getCartItemsQuantityUseCase().stateIn(
+        scope = viewModelScope,
+        initialValue = 0,
         started = SharingStarted.WhileSubscribed(5000)
     )
 
@@ -59,7 +67,7 @@ class ProductListViewModel @Inject constructor(
         productsJob = combine(
             getProductsUseCase(),
             settingsRepository.selectedCaregory,
-            settingsRepository.sortOption
+            settingsRepository.sortOption,
         ) { products, category, sortOption ->
             var filteredProducts = products
 

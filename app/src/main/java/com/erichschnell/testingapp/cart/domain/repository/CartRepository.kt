@@ -3,7 +3,7 @@ package com.erichschnell.testingapp.cart.domain.repository
 import com.erichschnell.testingapp.cart.domain.models.CartItem
 import kotlinx.coroutines.flow.Flow
 
-interface CartItemRepository {
+interface CartRepository {
     fun getCartItems(): Flow<List<CartItem>>
     suspend fun getCartItemById(productId: String): CartItem?
 
