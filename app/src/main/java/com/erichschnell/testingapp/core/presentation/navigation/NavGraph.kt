@@ -7,7 +7,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.erichschnell.testingapp.cart.presentation.CartScreen
+import com.erichschnell.testingapp.cart.presentation.screen.CartScreen
 import com.erichschnell.testingapp.productDetail.presentation.screen.ProductDetailScreen
 import com.erichschnell.testingapp.productDetail.presentation.screen.ProductDetailViewModel
 import com.erichschnell.testingapp.productList.presentation.ProductListScreen

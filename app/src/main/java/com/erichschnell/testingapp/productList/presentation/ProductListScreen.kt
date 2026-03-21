@@ -21,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.erichschnell.testingapp.cart.presentation.CartViewModel
-import com.erichschnell.testingapp.cart.presentation.model.CartUiState
 import com.erichschnell.testingapp.productList.presentation.components.FiltersMenu
 import com.erichschnell.testingapp.productList.presentation.components.HomeTopAppBar
 import com.erichschnell.testingapp.productList.presentation.components.ProductListEmpty

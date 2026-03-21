@@ -1,4 +1,4 @@
-package com.erichschnell.testingapp.cart.presentation
+package com.erichschnell.testingapp.cart.presentation.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,7 @@ import com.erichschnell.testingapp.cart.domain.repository.CartRepository
 import com.erichschnell.testingapp.cart.domain.usecase.GetCartItemsWithPromotionsUseCase
 import com.erichschnell.testingapp.cart.domain.usecase.GetCartSummaryUseCase
 import com.erichschnell.testingapp.cart.domain.usecase.UpdateCartItemUseCase
+import com.erichschnell.testingapp.cart.presentation.model.CartAction
 import com.erichschnell.testingapp.cart.presentation.model.CartEvent
 import com.erichschnell.testingapp.cart.presentation.model.CartUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,12 +60,11 @@ class CartViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun onEvent(event: CartEvent) {
-        when(event){
-            is CartEvent.Input.DecreaseQuantity -> decreaseQuantity(event.productId, event.quantity)
-            is CartEvent.Input.IncreaseQuantity -> increaseQuantity(event.productId, event.quantity)
-            is CartEvent.Action.RemoveCartItem -> removeFromCart(event.productId)
-            is CartEvent.ShowMessage -> {}
+    fun onAction(action: CartAction) {
+        when(action){
+            is CartAction.DecreaseQuantity -> decreaseQuantity(action.productId, action.quantity)
+            is CartAction.IncreaseQuantity -> increaseQuantity(action.productId, action.quantity)
+            is CartAction.RemoveCartItem -> removeFromCart(action.productId)
         }
     }
 
