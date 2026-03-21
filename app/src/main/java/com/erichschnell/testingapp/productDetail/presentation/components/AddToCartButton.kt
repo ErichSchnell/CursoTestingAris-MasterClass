@@ -1,4 +1,4 @@
-package com.erichschnell.testingapp.detail.presentation.components
+package com.erichschnell.testingapp.productDetail.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -1,14 +1,15 @@
 package com.erichschnell.testingapp.core.presentation.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.erichschnell.testingapp.cart.presentation.CartScreen
-import com.erichschnell.testingapp.detail.presentation.ProductDetailScreen
+import com.erichschnell.testingapp.productDetail.presentation.screen.ProductDetailScreen
+import com.erichschnell.testingapp.productDetail.presentation.screen.ProductDetailViewModel
 import com.erichschnell.testingapp.productList.presentation.ProductListScreen
 import com.erichschnell.testingapp.settings.presentation.SettingScreen
 
@@ -34,8 +35,15 @@ fun NavGraph() {
             )
         }
         entry<Screen.ProductDetail> {
+
+            val viewModel = hiltViewModel<ProductDetailViewModel>()
+
+            LaunchedEffect(Unit) {
+                viewModel.loadProduct(it.productId)
+            }
+
             ProductDetailScreen(
-                productId = it.productId,
+                viewModel = viewModel,
                 onBack = { backStack.removeLastOrNull() }
             )
         }

@@ -1,4 +1,4 @@
-package com.erichschnell.testingapp.detail.domain.usecase
+package com.erichschnell.testingapp.productDetail.domain.usecase
 
 import com.erichschnell.testingapp.cart.domain.ex.activeAt
 import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotion

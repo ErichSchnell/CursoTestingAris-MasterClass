@@ -1,10 +1,13 @@
-package com.erichschnell.testingapp.detail.presentation
+package com.erichschnell.testingapp.productDetail.presentation.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.erichschnell.testingapp.cart.domain.usecase.AddToCartUseCase
 import com.erichschnell.testingapp.core.domain.model.AppError
-import com.erichschnell.testingapp.detail.domain.usecase.GetProductDetailWithPromotionUseCase
+import com.erichschnell.testingapp.productDetail.domain.usecase.GetProductDetailWithPromotionUseCase
+import com.erichschnell.testingapp.productDetail.presentation.models.ProductDetailEvent
+import com.erichschnell.testingapp.productDetail.presentation.models.ProductDetailUiAction
+import com.erichschnell.testingapp.productDetail.presentation.models.ProductDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -49,7 +52,13 @@ class ProductDetailViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun addToCart() {
+    fun onAction(action: ProductDetailUiAction){
+        when(action){
+            ProductDetailUiAction.AddToCart -> addToCart()
+        }
+    }
+
+    private fun addToCart() {
         val productId = _uiState.value.item?.product?.id ?: return
         viewModelScope.launch {
             try {

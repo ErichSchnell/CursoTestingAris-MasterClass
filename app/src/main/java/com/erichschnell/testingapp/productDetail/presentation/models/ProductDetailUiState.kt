@@ -1,4 +1,4 @@
-package com.erichschnell.testingapp.detail.presentation
+package com.erichschnell.testingapp.productDetail.presentation.models
 
 import com.erichschnell.testingapp.productList.domain.models.ProductWithPromotion
 
