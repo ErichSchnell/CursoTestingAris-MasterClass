@@ -2,8 +2,8 @@ package com.erichschnell.testingapp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.erichschnell.testingapp.core.domain.model.ThemeMode
-import com.erichschnell.testingapp.productList.domain.repository.SettingsRepository
+import com.erichschnell.testingapp.domain.core.model.ThemeMode
+import com.erichschnell.testingapp.domain.repository.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

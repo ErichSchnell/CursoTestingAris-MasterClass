@@ -1,7 +1,7 @@
 package com.erichschnell.testingapp.di
 
 import com.erichschnell.testingapp.BuildConfig
-import com.erichschnell.testingapp.productList.data.remote.MiniMarketApiService
+import com.erichschnell.testingapp.data.remote.MiniMarketApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
