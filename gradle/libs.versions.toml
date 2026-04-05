@@ -20,6 +20,7 @@ okhttp = "5.3.2"
 coroutines = "1.10.2"
 ksp = "2.3.0"
 coreKtxVersion = "1.18.0"
+mockk = "1.14.9"
 
 
 [libraries]
@@ -74,6 +75,10 @@ okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor",
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+
+#Mock
+mockK = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
 
 #Lifecycle
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
