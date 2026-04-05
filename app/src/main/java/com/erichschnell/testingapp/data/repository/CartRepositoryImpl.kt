@@ -13,7 +13,7 @@ import javax.inject.Inject
 class CartRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource
 ): CartRepository {
-    override fun getCartItems(): Flow<List<CartItem>> = localDataSource.getllCartItems()
+    override fun getCartItems(): Flow<List<CartItem>> = localDataSource.getAllCartItems()
         .map { cartItems -> cartItems.map { it.toDomain() } }
 
     override suspend fun getCartItemById(productId: String): CartItem? {

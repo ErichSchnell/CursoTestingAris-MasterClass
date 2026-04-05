@@ -28,7 +28,7 @@ class LocalDataSource @Inject constructor(
 
 
 
-    fun getllCartItems() = cartItemDao.getAllCartItems()
+    fun getAllCartItems() = cartItemDao.getAllCartItems()
     suspend fun getCartItemById(productId: String) = cartItemDao.getCartItemById(productId)
     suspend fun insertCartItem(cartItem: CartItemEntity): Result<Unit> {
         return try {

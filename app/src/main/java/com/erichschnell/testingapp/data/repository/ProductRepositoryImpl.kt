@@ -42,7 +42,6 @@ class ProductRepositoryImpl @Inject constructor(
                         refreshMutex.unlock()
                     }
                 }
-                refreshProduct()
             }
             .catch {
 
