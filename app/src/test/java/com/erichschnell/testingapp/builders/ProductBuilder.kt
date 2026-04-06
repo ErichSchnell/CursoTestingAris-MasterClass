@@ -30,4 +30,4 @@ class ProductBuilder {
     )
 }
 
-fun product (block: ProductBuilder.() -> Unit) = ProductBuilder().apply(block).build()
+fun product (block: ProductBuilder.() -> Unit = {}) = ProductBuilder().apply(block).build()
