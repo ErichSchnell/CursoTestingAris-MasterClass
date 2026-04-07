@@ -12,8 +12,12 @@ class FakeCartRepository: CartRepository {
 
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
 
-    override fun getCartItems(): Flow<List<CartItem>> = _cartItems.asStateFlow()
+    fun setCartItems(cartItems: List<CartItem>){
+        _cartItems.value = cartItems
+    }
 
+
+    override fun getCartItems(): Flow<List<CartItem>> = _cartItems.asStateFlow()
 
     override suspend fun getCartItemById(productId: String): CartItem? = _cartItems.value.find { it.productId == productId }
 
