@@ -16,9 +16,11 @@ import com.erichschnell.testingapp.data.local.database.dao.PromotionDao
 import com.erichschnell.testingapp.data.repository.ProductRepositoryImpl
 import com.erichschnell.testingapp.data.repository.PromotionRepositoryImpl
 import com.erichschnell.testingapp.data.repository.SettingsRepositoryImpl
+import com.erichschnell.testingapp.data.util.SystemClock
 import com.erichschnell.testingapp.domain.repository.ProductRepository
 import com.erichschnell.testingapp.domain.repository.PromotionRepository
 import com.erichschnell.testingapp.domain.repository.SettingsRepository
+import com.erichschnell.testingapp.domain.util.Clock
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -93,5 +95,11 @@ object DataModule {
     @Singleton
     fun provideCartItemRepository(cartItemRepositoryImpl: CartRepositoryImpl): CartRepository {
         return cartItemRepositoryImpl
+    }
+
+    @Provides
+    @Singleton
+    fun provideSystemClock(systemClock: SystemClock): Clock {
+        return systemClock
     }
 }

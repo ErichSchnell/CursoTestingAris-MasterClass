@@ -5,6 +5,7 @@ import com.erichschnell.testingapp.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.domain.repository.ProductRepository
 import com.erichschnell.testingapp.domain.repository.PromotionRepository
 import com.erichschnell.testingapp.domain.repository.SettingsRepository
+import com.erichschnell.testingapp.domain.util.Clock
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import java.time.Instant
@@ -15,6 +16,7 @@ class GetProductsUseCase @Inject constructor(
     private val promotionRepository: PromotionRepository,
     private val getPromotionForProduct: GetPromotionForProduct,
     private val settingsRepository: SettingsRepository,
+    private val clock: Clock
 ) {
     operator fun invoke(): Flow<List<ProductWithPromotion>> {
         return combine(
@@ -23,14 +25,13 @@ class GetProductsUseCase @Inject constructor(
             settingsRepository.inStockOnly
         ) { products, promotions, inStockOnly ->
 
-            val activePromotions = promotions.activeAt(Instant.now())
+            val activePromotions = promotions.activeAt(clock.now())
 
             val filteredProducts = if (inStockOnly) {
                 products.filter { it.stock > 0 }
             } else {
                 products
             }
-
 
             filteredProducts.map { product ->
                 val promotion = getPromotionForProduct(product, activePromotions)
