@@ -97,6 +97,7 @@ dependencies {//Core
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockK)
+    testImplementation(libs.turbine)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
