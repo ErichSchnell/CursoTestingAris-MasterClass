@@ -7,6 +7,7 @@ import com.erichschnell.testingapp.domain.repository.SettingsRepository
 import com.erichschnell.testingapp.presentation.settings.models.SettingUiAction
 import com.erichschnell.testingapp.presentation.settings.models.SettingUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -27,20 +28,23 @@ class SettingViewModel @Inject constructor(
     }
 
     private fun loadSettings() {
-        combine(
-            settingsRepository.inStockOnly,
-            settingsRepository.themeMode,
-            settingsRepository.showTaxes
-        ) { inStockOnly, themeMode, showTaxes ->
-            _uiState.value = SettingUiState(
-                inStockOnly = inStockOnly,
-                showTaxes = showTaxes,
-                themeMode = themeMode
-            )
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            delay(2000)
+            combine(
+                settingsRepository.inStockOnly,
+                settingsRepository.themeMode,
+                settingsRepository.showTaxes
+            ) { inStockOnly, themeMode, showTaxes ->
+                _uiState.value = SettingUiState(
+                    inStockOnly = inStockOnly,
+                    showTaxes = showTaxes,
+                    themeMode = themeMode
+                )
+            }.launchIn(this)
+        }
     }
 
-    fun onAction(event: SettingUiAction){
+    fun onAction(event: SettingUiAction) = viewModelScope.launch {
         when(event){
             is SettingUiAction.SetInStockOnly -> setInStockOnly(event.state)
             is SettingUiAction.SetShowTaxes -> setShowTaxes(event.state)
@@ -48,16 +52,16 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    private fun setInStockOnly(state: Boolean) {
-        viewModelScope.launch { settingsRepository.setInStockOnly(state) }
+    private suspend fun setInStockOnly(state: Boolean) {
+        settingsRepository.setInStockOnly(state)
     }
 
-    private fun setShowTaxes(state: Boolean) {
-        viewModelScope.launch { settingsRepository.setShowTaxes(state) }
+    private suspend fun setShowTaxes(state: Boolean) {
+        settingsRepository.setShowTaxes(state)
     }
 
-    private fun setThemeMode(themeMode: ThemeMode) {
-        viewModelScope.launch { settingsRepository.setThemeMode(themeMode) }
+    private suspend fun setThemeMode(themeMode: ThemeMode) {
+        settingsRepository.setThemeMode(themeMode)
     }
 
 }

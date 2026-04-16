@@ -1,5 +1,6 @@
-package com.erichschnell.testingapp.presentation.core.ex
+package com.erichschnell.testingapp.core.ex
 
+import com.erichschnell.testingapp.presentation.core.ex.roundTo2Decimals
 import org.junit.Assert.*
 import org.junit.Test
 
