@@ -1,6 +1,5 @@
 package com.erichschnell.testingapp.fakes
 
-import com.erichschnell.testingapp.data.mappers.toEntity
 import com.erichschnell.testingapp.domain.core.model.AppError
 import com.erichschnell.testingapp.domain.models.CartItem
 import com.erichschnell.testingapp.domain.repository.CartRepository

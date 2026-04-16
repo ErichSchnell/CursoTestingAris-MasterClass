@@ -3,25 +3,26 @@ package com.erichschnell.testingapp.domain.usecases
 import com.erichschnell.testingapp.domain.ex.activeAt
 import com.erichschnell.testingapp.domain.models.CartItem
 import com.erichschnell.testingapp.domain.models.CartSummary
-import com.erichschnell.testingapp.domain.repository.CartRepository
 import com.erichschnell.testingapp.domain.models.Product
 import com.erichschnell.testingapp.domain.models.ProductPromotion
 import com.erichschnell.testingapp.domain.models.Promotion
+import com.erichschnell.testingapp.domain.repository.CartRepository
 import com.erichschnell.testingapp.domain.repository.ProductRepository
 import com.erichschnell.testingapp.domain.repository.PromotionRepository
+import com.erichschnell.testingapp.domain.util.Clock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import java.time.Instant
 import javax.inject.Inject
 
 class GetCartSummaryUseCase @Inject constructor(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
     private val promotionRepository: PromotionRepository,
-    private val getPromotionForProductUseCase: GetPromotionForProduct
+    private val getPromotionForProductUseCase: GetPromotionForProduct,
+    private val clock: Clock
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(): Flow<CartSummary> {
@@ -35,7 +36,7 @@ class GetCartSummaryUseCase @Inject constructor(
                         productRepository.getProductsByIds(ids),
                         promotionRepository.getActivePromotions()
                     ) { products, promotions ->
-                        calculateSummary(cartItems, products, promotions)
+                        calculateSummary(cartItems, products, promotions, clock)
                     }
                 }
             }
@@ -44,9 +45,10 @@ class GetCartSummaryUseCase @Inject constructor(
     private fun calculateSummary(
         cartItems: List<CartItem>,
         products: List<Product>,
-        promotions: List<Promotion>
+        promotions: List<Promotion>,
+        clock: Clock
     ): CartSummary{
-        val activePromotions = promotions.activeAt(Instant.now())
+        val activePromotions = promotions.activeAt(clock.now())
 
         val productsById = products.associateBy { it.id }
         var subtotal = 0.0
