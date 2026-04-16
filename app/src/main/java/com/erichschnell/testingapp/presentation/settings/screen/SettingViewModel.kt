@@ -9,9 +9,12 @@ import com.erichschnell.testingapp.presentation.settings.models.SettingUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,29 +23,17 @@ class SettingViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingUiState())
-    val uiState = _uiState.asStateFlow()
-
-    init {
-        loadSettings()
-    }
-
-    private fun loadSettings() {
-        viewModelScope.launch {
-            delay(2000)
-            combine(
-                settingsRepository.inStockOnly,
-                settingsRepository.themeMode,
-                settingsRepository.showTaxes
-            ) { inStockOnly, themeMode, showTaxes ->
-                _uiState.value = SettingUiState(
-                    inStockOnly = inStockOnly,
-                    showTaxes = showTaxes,
-                    themeMode = themeMode
-                )
-            }.launchIn(this)
-        }
-    }
+    val uiState: StateFlow<SettingUiState> = combine(
+        settingsRepository.inStockOnly,
+        settingsRepository.themeMode,
+        settingsRepository.showTaxes
+    ) { inStockOnly, themeMode, showTaxes ->
+        SettingUiState(inStockOnly = inStockOnly, showTaxes = showTaxes, themeMode = themeMode)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = SettingUiState()
+    )
 
     fun onAction(event: SettingUiAction) = viewModelScope.launch {
         when(event){
