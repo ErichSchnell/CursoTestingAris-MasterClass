@@ -6,6 +6,7 @@ import com.erichschnell.testingapp.presentation.cart.model.CartItemWithPromotion
 import com.erichschnell.testingapp.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.domain.repository.ProductRepository
 import com.erichschnell.testingapp.domain.repository.PromotionRepository
+import com.erichschnell.testingapp.domain.util.Clock
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -19,7 +20,8 @@ class GetCartItemsWithPromotionsUseCase @Inject constructor(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
     private val promotionRepository: PromotionRepository,
-    private val getPromotionForProduct: GetPromotionForProduct
+    private val getPromotionForProduct: GetPromotionForProduct,
+    private val clock: Clock,
 ) {
     operator fun invoke(): Flow<List<CartItemWithPromotion>> {
         return cartRepository.getCartItems().flatMapLatest { cartItems ->
@@ -31,7 +33,7 @@ class GetCartItemsWithPromotionsUseCase @Inject constructor(
                     productRepository.getProductsByIds(ids),
                     promotionRepository.getActivePromotions()
                 ) { products, promotions ->
-                    val activePromotions = promotions.activeAt(Instant.now())
+                    val activePromotions = promotions.activeAt(clock.now())
 
                     val productsById = products.associateBy { it.id }
 
