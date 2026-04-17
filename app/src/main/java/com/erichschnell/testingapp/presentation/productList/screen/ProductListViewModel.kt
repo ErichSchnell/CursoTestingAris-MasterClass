@@ -34,8 +34,45 @@ class ProductListViewModel @Inject constructor(
     private val getCartItemsQuantityUseCase: GetCartItemsQuantityUseCase,
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow<ProductListUiState>(ProductListUiState.Loading)
-    val uiState = _uiState.asStateFlow()
+    val uiState: StateFlow<ProductListUiState> = combine(
+        getProductsUseCase(),
+        settingsRepository.selectedCaregory,
+        settingsRepository.sortOption,
+    ) { products, category, sortOption ->
+        var filteredProducts = products
+
+        if (category != null) {
+            filteredProducts = filteredProducts.filter { it.product.category == category }
+        }
+
+        val sorted = when(sortOption) {
+            SortOption.PRICE_ASC -> filteredProducts.sortedBy { effectivePrice(it) }
+            SortOption.PRICE_DESC -> filteredProducts.sortedByDescending { effectivePrice(it) }
+            SortOption.NONE -> filteredProducts
+            SortOption.DISCOUNT -> filteredProducts.sortedWith (
+                compareByDescending<ProductWithPromotion> {
+                    effectiveDiscountPercent(it)
+                }.thenBy { it.promotion == null }
+            )
+        }
+
+        val categories = products.map { it.product.category }.distinct().sorted()
+
+        ProductListUiState.Success(
+            products = sorted,
+            categories = categories,
+            selectedCategory = category,
+            sortOption = sortOption
+        ) as ProductListUiState
+    }.catch {
+        emit(ProductListUiState.Error(it.message.orEmpty()))
+    }.stateIn(
+        scope = viewModelScope,
+        initialValue = ProductListUiState.Loading,
+        started = SharingStarted.WhileSubscribed(5000)
+    )
+
+
 
     private val _events = MutableSharedFlow<ProductListEvent>(extraBufferCapacity = 1)
     val events = _events.asSharedFlow()
@@ -51,57 +88,6 @@ class ProductListViewModel @Inject constructor(
         initialValue = 0,
         started = SharingStarted.WhileSubscribed(5000)
     )
-
-
-
-    private var productsJob: Job? = null
-
-    init {
-        loadProducts()
-    }
-
-    fun loadProducts(){
-        _uiState.value = ProductListUiState.Loading
-
-        productsJob?.cancel()
-        productsJob = combine(
-            getProductsUseCase(),
-            settingsRepository.selectedCaregory,
-            settingsRepository.sortOption,
-        ) { products, category, sortOption ->
-            var filteredProducts = products
-
-            if (category != null) {
-                filteredProducts = filteredProducts.filter { it.product.category == category }
-            }
-
-            val sorted = when(sortOption) {
-                SortOption.PRICE_ASC -> filteredProducts.sortedBy { effectivePrice(it) }
-                SortOption.PRICE_DESC -> filteredProducts.sortedByDescending { effectivePrice(it) }
-                SortOption.NONE -> filteredProducts
-                SortOption.DISCOUNT -> filteredProducts.sortedWith (
-                    compareByDescending<ProductWithPromotion> {
-                        effectiveDiscountPercent(it)
-                    }.thenBy { it.promotion == null }
-                )
-            }
-
-            val categories = products.map { it.product.category }.distinct().sorted()
-
-            ProductListUiState.Success(
-                products = sorted,
-                categories = categories,
-                selectedCategory = category,
-                sortOption = sortOption
-            )
-        }.onEach { state ->
-            _uiState.value = state
-        }
-        .catch {
-            _uiState.value = ProductListUiState.Error(it.message ?: "Unknown error")
-        }
-        .launchIn(viewModelScope)
-    }
 
     fun onAction(event: ProductListAction){
         when(event){
