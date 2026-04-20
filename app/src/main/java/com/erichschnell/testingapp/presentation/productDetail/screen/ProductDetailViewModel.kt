@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductDetailViewModel @Inject constructor(
+class ProductDetailViewModel  @Inject constructor(
     private val getProductDetailWithPromotionUseCase: GetProductDetailWithPromotionUseCase,
     private val addToCartUseCase: AddToCartUseCase
 ): ViewModel() {
@@ -33,7 +33,6 @@ class ProductDetailViewModel @Inject constructor(
     val events = _events.asSharedFlow()
 
     private var productJob: Job? = null
-
     fun loadProduct(productId: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
         productJob?.cancel()
