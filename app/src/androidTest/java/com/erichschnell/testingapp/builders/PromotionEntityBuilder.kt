@@ -7,13 +7,13 @@ import java.time.Instant
 
 class PromotionEntityBuilder {
     private var id: String = "promo-id"
-    private var productIds: String = ""
+    private var productIds: String = """["product-id"]"""
     private var type: String = PromotionType.PERCENT.name
     private var percent: Int? = null
     private var buyX: Int? = null
     private var payY: Int? = null
     private var startAtEpoch: Long = 0
-    private var endAtEpoch: Long = 0
+    private var endAtEpoch: Long = 1
 
     fun withId(id: String) = apply { this.id = id}
     fun withProductIds(productIds: String) =  apply { this.productIds = productIds}
