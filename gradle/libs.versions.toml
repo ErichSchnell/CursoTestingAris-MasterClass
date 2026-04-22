@@ -22,6 +22,7 @@ ksp = "2.3.0"
 coreKtxVersion = "1.18.0"
 mockk = "1.14.9"
 turbine = "1.2.1"
+mockwebserver = "5.3.2"
 
 
 [libraries]
@@ -76,11 +77,12 @@ okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor",
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
-turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 
 #Mock
 mockK = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" }
 
 
 #Lifecycle
