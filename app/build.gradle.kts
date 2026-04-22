@@ -22,7 +22,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.erichschnell.testingapp.HiltTestrunner"
     }
 
     buildTypes {
@@ -103,6 +103,9 @@ dependencies {//Core
     androidTestImplementation(libs.turbine)
 
     testImplementation(libs.mockwebserver)
+
+    androidTestImplementation(libs.hilt.android.testing)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
