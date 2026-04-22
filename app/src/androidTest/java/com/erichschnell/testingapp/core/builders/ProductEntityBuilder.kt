@@ -1,7 +1,6 @@
-package com.erichschnell.testingapp.builders
+package com.erichschnell.testingapp.core.builders
 
 import com.erichschnell.testingapp.data.local.database.entity.ProductEntity
-import com.erichschnell.testingapp.domain.models.Product
 
 class ProductEntityBuilder {
     private var id: String = "product-1"

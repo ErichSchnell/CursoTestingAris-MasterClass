@@ -3,7 +3,7 @@ package com.erichschnell.testingapp.data.local.database.dao
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.erichschnell.testingapp.builders.promotionEntity
+import com.erichschnell.testingapp.core.builders.promotionEntity
 import com.erichschnell.testingapp.data.local.database.MiniMarketDataBase
 import com.erichschnell.testingapp.domain.models.PromotionType
 import kotlinx.coroutines.flow.first

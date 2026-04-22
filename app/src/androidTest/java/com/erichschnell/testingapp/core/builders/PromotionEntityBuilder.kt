@@ -1,9 +1,7 @@
-package com.erichschnell.testingapp.builders
+package com.erichschnell.testingapp.core.builders
 
 import com.erichschnell.testingapp.data.local.database.entity.PromotionEntity
-import com.erichschnell.testingapp.domain.models.Promotion
 import com.erichschnell.testingapp.domain.models.PromotionType
-import java.time.Instant
 
 class PromotionEntityBuilder {
     private var id: String = "promo-id"
