@@ -1,9 +1,9 @@
 package com.erichschnell.testingapp.core.di
 
-import androidx.test.espresso.core.internal.deps.dagger.Module
 import com.erichschnell.testingapp.core.mockwebserver.MockWebServerUrlHolder
 import com.erichschnell.testingapp.data.remote.MiniMarketApiService
 import com.erichschnell.testingapp.di.NetworkModule
+import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
