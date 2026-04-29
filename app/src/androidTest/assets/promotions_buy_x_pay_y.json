@@ -1,0 +1,74 @@
+{
+  "promotions": [
+    {
+      "id": "promo2",
+      "productId": "p2",
+      "type": "BUY_X_PAY_Y",
+      "percent": null,
+      "buyX": 2,
+      "payY": 1,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+    {
+      "id": "promo4",
+      "productId": "p6",
+      "type": "BUY_X_PAY_Y",
+      "percent": null,
+      "buyX": 3,
+      "payY": 2,
+      "startAtEpoch": 2000000000,
+      "endAtEpoch": 2100000000
+    },
+    {
+      "id": "promo6",
+      "productId": "p12",
+      "type": "BUY_X_PAY_Y",
+      "percent": null,
+      "buyX": 2,
+      "payY": 1,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+    {
+      "id": "promo8",
+      "productId": "p17",
+      "type": "BUY_X_PAY_Y",
+      "percent": null,
+      "buyX": 2,
+      "payY": 1,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+    {
+      "id": "promo11",
+      "productId": "p31",
+      "type": "BUY_X_PAY_Y",
+      "percent": null,
+      "buyX": 3,
+      "payY": 2,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+    {
+      "id": "promo13",
+      "productId": "p6",
+      "type": "BUY_X_PAY_Y",
+      "percent": null,
+      "buyX": 3,
+      "payY": 2,
+      "startAtEpoch": 1500000000,
+      "endAtEpoch": 1600000000
+    },
+    {
+      "id": "promo15",
+      "productId": "p40",
+      "type": "BUY_X_PAY_Y",
+      "percent": null,
+      "buyX": 4,
+      "payY": 3,
+      "startAtEpoch": 2000000000,
+      "endAtEpoch": 2100000000
+    }
+  ]
+}

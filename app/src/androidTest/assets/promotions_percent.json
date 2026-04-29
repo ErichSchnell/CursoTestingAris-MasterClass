@@ -1,0 +1,87 @@
+{
+  "promotions": [
+    {
+      "id": "promo1",
+      "productId": "p1",
+      "type": "PERCENT",
+      "percent": 20,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+    {
+      "id": "promo3",
+      "productId": "p5",
+      "type": "PERCENT",
+      "percent": 10,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 1500000000,
+      "endAtEpoch": 1600000000
+    },
+    {
+      "id": "promo5",
+      "productId": "p8",
+      "type": "PERCENT",
+      "percent": 25,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+    {
+      "id": "promo7",
+      "productId": "p15",
+      "type": "PERCENT",
+      "percent": 30,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+    {
+      "id": "promo9",
+      "productId": "p19",
+      "type": "PERCENT",
+      "percent": 12,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+
+    {
+      "id": "promo10",
+      "productId": "p29",
+      "type": "PERCENT",
+      "percent": 18,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 1700000000,
+      "endAtEpoch": 1893456000
+    },
+
+    {
+      "id": "promo12",
+      "productId": "p5",
+      "type": "PERCENT",
+      "percent": 10,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 1500000000,
+      "endAtEpoch": 1600000000
+    },
+
+    {
+      "id": "promo14",
+      "productId": "p22",
+      "type": "PERCENT",
+      "percent": 15,
+      "buyX": null,
+      "payY": null,
+      "startAtEpoch": 2000000000,
+      "endAtEpoch": 2100000000
+    }
+  ]
+}
