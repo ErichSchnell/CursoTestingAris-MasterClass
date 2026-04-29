@@ -85,4 +85,13 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun setSortOption(value: SortOption) {
         dataStore.edit { it[SORT_OPTION_KEY] = value.name }
     }
+
+    override suspend fun clear() {
+        dataStore.edit { it.clear() }
+    }
+
+
+
+
+
 }

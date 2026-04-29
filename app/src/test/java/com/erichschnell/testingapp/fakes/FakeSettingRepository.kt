@@ -29,4 +29,8 @@ class FakeSettingRepository(): SettingsRepository {
     override suspend fun setSelectedCaregory(value: String?) { _selectedCategoryFlow.value = value }
     override suspend fun setFiltersVisible(value: Boolean) { _filtersVisibleFlow.value = value }
     override suspend fun setSortOption(value: SortOption) { _sortOptionFlow.value = value }
+
+    override suspend fun clear(){
+
+    }
 }

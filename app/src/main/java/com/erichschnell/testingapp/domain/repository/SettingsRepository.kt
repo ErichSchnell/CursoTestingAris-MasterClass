@@ -18,4 +18,5 @@ interface SettingsRepository {
     suspend fun setSelectedCaregory(value: String?)
     suspend fun setFiltersVisible(value: Boolean)
     suspend fun setSortOption(value: SortOption)
+    suspend fun clear()
 }
