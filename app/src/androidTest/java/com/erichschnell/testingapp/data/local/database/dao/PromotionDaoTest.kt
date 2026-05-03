@@ -39,8 +39,8 @@ class PromotionDaoTest {
     - givenAListOfPromotions_whenGetAllPromotions_thenEmitsTheList
     - givenAListOfPromotions_whenClearPromotions_thenCleanDatabase
     - givenAListOfPromotions_whenReplaceAll_thenCleanDatabaseAndInsertsNewPromotions
-    ------------------------------------------------------------------
     - givenAListOfPromotionsExistent_whenInsertPromotions_thenUpdateAllPromotionsExistentAndInsertNewPromotions
+    ------------------------------------------------------------------
      */
 
     @Test

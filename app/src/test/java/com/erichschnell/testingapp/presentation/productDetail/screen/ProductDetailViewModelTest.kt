@@ -56,14 +56,9 @@ class ProductDetailViewModelTest {
     given a non-existent product when loadProduct then update ui state with loading false and null product
     given an UnknownError exception when loadProduct then emits event with UnknownError
     given product when addToCart then add product en repository and emits event with AddProductSuccess
-
-    ------------------------------------- POR HACER  --------------------------------
-
-    given an DatabaseError exception when loadProduct then emits event with DatabaseError
-    given an QuantityMustBePositive exception when loadProduct then emits event with QuantityMustBePositive
-    given an NotFoundError exception when loadProduct then emits event with NotFoundError
-    given an NetworkError exception when loadProduct then emits event with NetworkError
+    given an DatabaseError exception when loadProduct then emits event with NotFoundError
     given an InsufficientStock exception when loadProduct then emits event with InsufficientStock
+    ------------------------------------- POR HACER  --------------------------------
  */
 
     @Test
@@ -126,18 +121,11 @@ class ProductDetailViewModelTest {
             val productRepo = FailingProductRepositoryStub(AppError.UnknownError(null))
             val viewModel = createViewModel(productRepository = productRepo)
 
-            viewModel.uiState.test {
-                awaitItem()
+            viewModel.events.test {
+                viewModel.loadProduct("other-id")
 
-                viewModel.events.test {
-                    awaitItem()
-                    viewModel.loadProduct("other-id")
-
-                    val event = awaitItem()
-                    assertTrue(event is ProductDetailEvent.Toast.NotFoundError)
-                    cancelAndIgnoreRemainingEvents()
-                }
-
+                val event = awaitItem()
+                assertTrue(event is ProductDetailEvent.Toast.NotFoundError)
                 cancelAndIgnoreRemainingEvents()
             }
         }
@@ -162,4 +150,42 @@ class ProductDetailViewModelTest {
             }
         }
 
+    @Test
+    fun `given an DatabaseError exception when loadProduct then emits event with NotFoundError`() =
+        runTest (mainDispatcherRule.scheduler) {
+            val productRepo = FailingProductRepositoryStub(AppError.DatabaseError)
+            val viewModel = createViewModel(productRepository = productRepo)
+
+            viewModel.events.test {
+                viewModel.loadProduct("other-id")
+
+                val event = awaitItem()
+                assertTrue(event is ProductDetailEvent.Toast.NotFoundError)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
+    @Test
+    fun `given product when addToCart with insufficient stock then emits event with InsufficientStock`() =
+        runTest (mainDispatcherRule.scheduler) {
+            val product = product { withId("p1"); withStock(0)}
+            val productRepo = FakeProductRepository().apply { setProducts(listOf(product)) }
+            val viewModel = createViewModel(productRepository = productRepo)
+
+            viewModel.loadProduct(product.id)
+
+            viewModel.events.test {
+
+                viewModel.onAction(ProductDetailUiAction.AddToCart)
+
+                val event = awaitItem()
+                assertTrue(event is ProductDetailEvent.Toast.InsufficientStock)
+                cancelAndIgnoreRemainingEvents()
+            }
+        }
+
 }
+
+
+
+

@@ -34,26 +34,6 @@ class CartRepositoryImplTest {
         hilt.inject()
     }
 
-    @After
-    fun tearDown() {
-//        MockWebServerUrlHolder.baseUrl = "http://localhost:8080/"
-    }
-
-    /*
-    givenCartItemsEmpty_whenGetCartItemsIsCalled_thenReturnsEmptyList
-    givenCartItems_whenGetCartItemsIsCalled_thenReturnsListOfCartItems
-    givenCartItem_whenGetCartItemByIdIsCalled_thenReturnsCorrectCartItem
-    givenCartItemNotExistInCart_whenGetCartItemByIdIsCalled_thenReturnsNull
-    givenProductIdExistInCartAndQuantity_whenAddToCartIsCalled_thenCartItemIsUpdated
-    givenProductIdNotExistInCart_whenAddToCartIsCalled_thenCartItemIsAddedToCart
-    givenProductIdExistInCart_whenRemoveCartItemIsCalled_thenCartItemIsRemoved
-    givenProductIdNotExistInCart_whenRemoveCartItemIsCalled_thenThrowsNotFoundError
-    givenProductIdExistInCart_whenUpdateQuantityIsCalled_thenCartItemIsUpdated
-    givenProductIdNotExistInCart_whenUpdateQuantityIsCalled_thenThrowsNotFoundError
-    givenCartItems_whenClearCartIsCalled_thenCartIsEmpty
-    --------------------------------------------------------------------
-    */
-
     @Test
     fun givenCartItemsEmpty_whenGetCartItemsIsCalled_thenReturnsEmptyList() = runTest {
         val cartItems = cartRepository.getCartItems().first()

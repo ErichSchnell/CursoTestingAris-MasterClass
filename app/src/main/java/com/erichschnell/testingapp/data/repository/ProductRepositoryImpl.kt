@@ -5,6 +5,7 @@ import com.erichschnell.testingapp.data.local.LocalDataSource
 import com.erichschnell.testingapp.data.mappers.toDomain
 import com.erichschnell.testingapp.data.mappers.toEntity
 import com.erichschnell.testingapp.data.remote.RemoteDataSource
+import com.erichschnell.testingapp.domain.core.model.AppError
 import com.erichschnell.testingapp.domain.models.Product
 import com.erichschnell.testingapp.domain.repository.ProductRepository
 import kotlinx.coroutines.CoroutineScope
@@ -56,7 +57,6 @@ class ProductRepositoryImpl @Inject constructor(
     override fun getProductById(id: String): Flow<Product?> {
         return localDataSource.getProductById(id)
             .map { it?.toDomain() }
-            .catch { }
     }
 
     override suspend fun refreshProduct() {
