@@ -29,9 +29,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductListViewModel @Inject constructor(
-    private val getProductsUseCase: GetProductsUseCase,
+    getProductsUseCase: GetProductsUseCase,
     private val settingsRepository: SettingsRepository,
-    private val getCartItemsQuantityUseCase: GetCartItemsQuantityUseCase,
+    getCartItemsQuantityUseCase: GetCartItemsQuantityUseCase,
 ): ViewModel() {
 
     val uiState: StateFlow<ProductListUiState> = combine(

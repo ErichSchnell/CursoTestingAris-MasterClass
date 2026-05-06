@@ -5,19 +5,15 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SettingsRepositoryImplTest">
+      <SelectionState runConfigName="givenSuccessfullApi_whenViewModelLoads_thenShowsProducts()">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="givenNoDataSaved_whenSortOptionIsRead_thenRetunrsDefaultFalse()">
+      <SelectionState runConfigName="givenDairyCategorySelected_whenFiltering_thenOnlyDairyProductsAreShown()">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="givenProductIdNotExistInCart_whenRemoveCartItemIsCalled_thenThrowsNotFoundError()">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DialogSelection />
-      </SelectionState>
-      <SelectionState runConfigName="CartRepositoryImplTest">
+      <SelectionState runConfigName="givenProductsLoaded_whenSortingByPriceAsc_thenListIsCorrectlySorted()">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>

@@ -3,6 +3,7 @@ package com.erichschnell.testingapp.data.repository
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.erichschnell.testingapp.core.mockwebserver.MockWebServerUrlHolder
 import com.erichschnell.testingapp.core.mockwebserver.rules.MockWebServerRule
+import com.erichschnell.testingapp.core.utils.JsonUtils.readJson
 import com.erichschnell.testingapp.domain.repository.PromotionRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,11 +39,6 @@ class PromotionRepositoryImplTest {
     @After
     fun tearDown() {
         MockWebServerUrlHolder.baseUrl = "http://localhost:8080/"
-    }
-
-    private fun readJson( fileName: String): String {
-        val context = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().context
-        return context.assets.open(fileName).bufferedReader().use { it.readText() }
     }
 
     @Test

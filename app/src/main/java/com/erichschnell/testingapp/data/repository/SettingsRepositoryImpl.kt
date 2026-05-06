@@ -12,6 +12,7 @@ import com.erichschnell.testingapp.domain.models.SortOption
 import com.erichschnell.testingapp.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
@@ -88,6 +89,7 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun clear() {
         dataStore.edit { it.clear() }
+        dataStore.data.first { it.asMap().isEmpty() }
     }
 
 
