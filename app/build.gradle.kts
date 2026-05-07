@@ -110,6 +110,8 @@ dependencies {//Core
     //Hilt
     androidTestImplementation(libs.hilt.android.testing)
 
+    androidTestImplementation(libs.kotlin.test)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
