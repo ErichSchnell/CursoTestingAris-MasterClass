@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -20,6 +21,7 @@ fun RowSettingSwitch(
     title: String,
     description: String,
     checked: Boolean,
+    tagTest: String = "",
     onCheckedChange: (Boolean) -> Unit
 ) {
     Column(modifier){
@@ -42,7 +44,7 @@ fun RowSettingSwitch(
                 )
             }
 
-            Switch(checked = checked, onCheckedChange = onCheckedChange)
+            Switch(modifier = Modifier.testTag(tagTest),checked = checked, onCheckedChange = onCheckedChange)
         }
         HorizontalDivider()
     }

@@ -19,7 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,45 +31,52 @@ import com.erichschnell.testingapp.presentation.settings.components.CategorySett
 import com.erichschnell.testingapp.presentation.settings.components.RowSettingSwitch
 import com.erichschnell.testingapp.presentation.settings.models.SettingUiAction
 import com.erichschnell.testingapp.presentation.settings.models.SettingUiState
+import com.erichschnell.testingapp.presentation.settings.models.SettingsStr
+import com.erichschnell.testingapp.presentation.settings.models.SettingsTestTags
 
 @Composable
 fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel(),
-    onBack: () -> Unit
+    onBack: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = { MarketTopAppBar(title = "Ajustes", onBackSelected = { onBack() }) }
-    ) { paddings ->
-        SuccessContent(
-            modifier = Modifier.fillMaxSize().padding(paddings).padding(16.dp),
-            state = uiState,
-            onAction = viewModel::onAction
-        )
-    }
+    SuccessContent(
+        state = uiState,
+        onAction = viewModel::onAction,
+        onBack = onBack
+    )
+
 }
 
 @Composable
 fun SuccessContent(
     modifier: Modifier = Modifier,
     state: SettingUiState,
-    onAction: (SettingUiAction) -> Unit
+    onAction: (SettingUiAction) -> Unit,
+    onBack: () -> Unit,
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        FiltersAndVisualization(
-            showInStock = state.inStockOnly,
-            onShowInStockChange = { onAction(SettingUiAction.SetInStockOnly(it)) },
-            showTaxes = state.showTaxes,
-            onShowTaxesChange = { onAction(SettingUiAction.SetShowTaxes(it)) }
-        )
-        SettingThemeApp(
-            themeSelected = state.themeMode,
-            onThemeSelected = { onAction(SettingUiAction.SetThemeMode(it)) }
-        )
+    Scaffold(
+        topBar = { MarketTopAppBar(title = SettingsStr.TITLE, onBackSelected = { onBack() }) }
+    ) { paddings ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddings)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            FiltersAndVisualization(
+                showInStock = state.inStockOnly,
+                onShowInStockChange = { onAction(SettingUiAction.SetInStockOnly(it)) },
+                showTaxes = state.showTaxes,
+                onShowTaxesChange = { onAction(SettingUiAction.SetShowTaxes(it)) }
+            )
+            SettingThemeApp(
+                themeSelected = state.themeMode,
+                onThemeSelected = { onAction(SettingUiAction.SetThemeMode(it)) }
+            )
+        }
     }
 }
 
@@ -82,18 +91,20 @@ private fun FiltersAndVisualization(
     CategorySettingCard(
         modifier = modifier,
         icon = Icons.Default.Info,
-        title = "Filtros y visualización"
+        title = SettingsStr.CATEGORY_FILTERS_AND_VISUALIZATION
     ) {
         RowSettingSwitch(
-            title = "Solo productos en Stock",
-            description = "Muestrame únicamente productos disponibles",
+            title = SettingsStr.SHOW_IN_STOCK_ONLY,
+            description = SettingsStr.SHOW_IN_STOCK_ONLY_DESCRIPTION,
             checked = showInStock,
+            tagTest = SettingsTestTags.SHOW_IN_STOCK_ONLY,
             onCheckedChange = onShowInStockChange
         )
         RowSettingSwitch(
-            title = "Mostrar impuestos incluídos",
-            description = "Incluir impuestos en los precios mostrados",
+            title = SettingsStr.SHOW_WITH_TAXES,
+            description = SettingsStr.SHOW_WITH_TAXES_DESCRIPTION,
             checked = showTaxes,
+            tagTest = SettingsTestTags.SHOW_WITH_TAXES,
             onCheckedChange = onShowTaxesChange
         )
     }
@@ -105,18 +116,18 @@ fun SettingThemeApp(modifier: Modifier = Modifier, themeSelected: ThemeMode, onT
     CategorySettingCard(
         modifier = modifier,
         icon = Icons.Default.DarkMode,
-        title = "Apariencia"
+        title = SettingsStr.CATEGORY_APPEARANCE
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                "Tema de la aplicación",
+                SettingsStr.THEME_MODE,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
             Text(
-                "Elige entre modo claro, oscuro y sistema",
+                SettingsStr.THEME_MODE_DESCRIPTION,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
 
@@ -127,24 +138,39 @@ fun SettingThemeApp(modifier: Modifier = Modifier, themeSelected: ThemeMode, onT
                 modifier = Modifier.fillMaxWidth()
             ) {
                 SegmentedButton(
+                    modifier = Modifier.testTag(SettingsTestTags.THEME_SYSTEM),
                     shape = SegmentedButtonDefaults.itemShape(0,3),
                     onClick = { onThemeSelected(ThemeMode.SYSTEM) },
                     selected = themeSelected == ThemeMode.SYSTEM,
-                    label = { Text("Sistema") },
+                    label = { Text(SettingsStr.THEME_SISTEMA) },
                 )
                 SegmentedButton(
+                    modifier = Modifier.testTag(SettingsTestTags.THEME_LIGHT),
                     shape = SegmentedButtonDefaults.itemShape(1,3),
                     onClick = { onThemeSelected(ThemeMode.LIGHT) },
                     selected = themeSelected == ThemeMode.LIGHT,
-                    label = { Text("Claro") },
+                    label = { Text(SettingsStr.THEME_LIGHT) },
                 )
                 SegmentedButton(
+                    modifier = Modifier.testTag(SettingsTestTags.THEME_DARK),
                     shape = SegmentedButtonDefaults.itemShape(2,3),
                     onClick = { onThemeSelected(ThemeMode.DARK) },
                     selected = themeSelected == ThemeMode.DARK,
-                    label = { Text("Oscuro") },
+                    label = { Text(SettingsStr.THEME_DARK) },
                 )
             }
         }
     }
+}
+
+
+@Preview
+@Composable
+private fun PreviewSuccessContent() {
+    SuccessContent(
+        modifier = Modifier,
+        state = SettingUiState(),
+        onAction = {},
+        onBack = {},
+    )
 }

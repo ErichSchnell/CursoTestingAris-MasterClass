@@ -15,6 +15,15 @@ android {
         }
     }
 
+    sourceSets {
+        getByName("test"){
+            java.directories.add("src/sharedTest/java")
+        }
+        getByName("androidTest"){
+            java.directories.add("src/sharedTest/java")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.erichschnell.testingapp"
         minSdk = 26

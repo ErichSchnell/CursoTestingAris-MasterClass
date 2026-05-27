@@ -1,7 +1,6 @@
 package com.erichschnell.testingapp.fakes
 
 import com.erichschnell.testingapp.domain.util.Clock
-import io.mockk.impl.InternalPlatform.time
 import java.time.Instant
 
 class FakeSystemClock(): Clock {

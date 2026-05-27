@@ -12,7 +12,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import com.erichschnell.testingapp.presentation.core.CoreTestTag
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,13 +30,18 @@ fun MarketTopAppBar(
                 fontWeight = FontWeight.Bold
             )
         },
-        navigationIcon = { IconButton(onClick = { onBackSelected() }) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "back",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }},
+        navigationIcon = {
+            IconButton(
+                modifier = Modifier.testTag(CoreTestTag.TOP_APP_BAR_BACK_BUTTON),
+                onClick = { onBackSelected() }
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "back",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
