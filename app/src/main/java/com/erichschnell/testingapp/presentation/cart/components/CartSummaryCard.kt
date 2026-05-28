@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.erichschnell.testingapp.domain.models.CartSummary
+import com.erichschnell.testingapp.presentation.cart.model.CartStr
 import java.text.NumberFormat
 
 @Composable
@@ -35,7 +36,7 @@ fun CartSummaryCard(
             verticalArrangement = Arrangement.spacedBy(22.dp)
         ) {
             Text(
-                text = "Resumen del carrito",
+                text = CartStr.SUMMARY_TITLE,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 fontWeight = FontWeight.Bold
@@ -44,10 +45,9 @@ fun CartSummaryCard(
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-//                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Subtotal",
+                    text = CartStr.SUMMARY_SUBTOTAL,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.Bold
@@ -62,10 +62,9 @@ fun CartSummaryCard(
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-//                verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Descuento",
+                        text = CartStr.SUMMARY_DISCOUNT,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.error,
                     )
@@ -87,7 +86,7 @@ fun CartSummaryCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "Total",
+                    text = CartStr.SUMMARY_TOTAL,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.Bold,

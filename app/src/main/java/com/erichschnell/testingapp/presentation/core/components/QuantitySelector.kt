@@ -17,12 +17,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.erichschnell.testingapp.presentation.cart.model.CartTestTags
 
 @Composable
 fun QuantitySelector(
     modifier: Modifier = Modifier,
+    addQuantityTestTag: String = "",
+    subtractQuantityTestTag: String = "",
     quantity: String,
     canIncrease: Boolean = true,
     canDecrease: Boolean = true,
@@ -35,7 +39,7 @@ fun QuantitySelector(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier.size(36.dp).testTag(subtractQuantityTestTag),
             onClick = onDecreaseQuantity,
             enabled = canDecrease
         )  {
@@ -52,7 +56,7 @@ fun QuantitySelector(
         ) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
                 Text(
-                    text = quantity.toString(),
+                    text = quantity,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.Bold
@@ -60,13 +64,13 @@ fun QuantitySelector(
             }
         }
         IconButton(
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier.size(36.dp).testTag(addQuantityTestTag),
             onClick = onIncreaseQuantity,
             enabled = canIncrease
         )  {
             Icon(
                 Icons.Default.Add,
-                contentDescription = "Restar cantidad",
+                contentDescription = "Agregar cantidad",
                 modifier = Modifier.size(24.dp)
             )
         }

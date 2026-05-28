@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ import coil3.compose.AsyncImage
 import com.erichschnell.testingapp.presentation.cart.model.CartItemWithPromotion
 import com.erichschnell.testingapp.presentation.core.components.QuantitySelector
 import com.erichschnell.testingapp.domain.models.ProductPromotion
+import com.erichschnell.testingapp.presentation.cart.model.CartTestTags
 import java.text.NumberFormat
 
 @Composable
@@ -70,7 +72,7 @@ fun CartItemCard(
     }
 
     SwipeToDismissBox(
-        modifier = modifier,
+        modifier = modifier.testTag(CartTestTags.removeItem(cartItem.productId)),
         state = dismissState,
         backgroundContent = {
             Box(
@@ -153,7 +155,13 @@ fun CartItemCard(
                         color = MaterialTheme.colorScheme.primary,
                     )
                     QuantitySelector(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(8.dp)),
+                        modifier = Modifier
+                            .background(
+                                MaterialTheme.colorScheme.surfaceVariant,
+                                shape = RoundedCornerShape(8.dp)
+                            ),
+                        addQuantityTestTag = CartTestTags.addQuantity(cartItem.productId),
+                        subtractQuantityTestTag = CartTestTags.subtractQuantity(cartItem.productId),
                         quantity = cartItem.quantity.toString(),
                         canDecrease = cartItem.quantity > 1,
                         canIncrease = cartItem.quantity < product.stock,

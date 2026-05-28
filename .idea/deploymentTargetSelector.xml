@@ -6,10 +6,6 @@
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SettingScreenTest">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DialogSelection />
-      </SelectionState>
       <SelectionState runConfigName="ProductListScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
@@ -19,6 +15,10 @@
         <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="givenRendered_whenShowFilterSelected_thenShowCardFilters()">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="CartScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>

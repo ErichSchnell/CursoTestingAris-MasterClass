@@ -17,18 +17,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.erichschnell.testingapp.presentation.cart.components.CartItemCard
 import com.erichschnell.testingapp.presentation.cart.components.CartSummaryCard
 import com.erichschnell.testingapp.presentation.cart.model.CartAction
 import com.erichschnell.testingapp.presentation.cart.model.CartItemWithPromotion
+import com.erichschnell.testingapp.presentation.cart.model.CartStr
+import com.erichschnell.testingapp.presentation.cart.model.CartTestTags
 import com.erichschnell.testingapp.presentation.cart.model.CartUiState
 import java.text.NumberFormat
 import java.util.Currency
 
 @Composable
-fun SuccesssContent(
+fun CartSuccesssContent(
     paddings: PaddingValues,
     state: CartUiState.Success,
     onAction: (CartAction) -> Unit
@@ -44,7 +47,8 @@ fun SuccesssContent(
         Modifier
             .padding(paddings)
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .testTag(CartTestTags.STATE_SUCCESS),
     ) {
         AnimatedContent(
             targetState = state.cartItems.isEmpty(),
@@ -57,15 +61,22 @@ fun SuccesssContent(
                     modifier = Modifier,
                     cartItems = state.cartItems,
                     currencyFormatter = currencyFormatter,
-                    onIncreseQuantity = {id, quantity -> onAction(CartAction.IncreaseQuantity(id, quantity)) },
-                    onDecreseQuantity = {id, quantity -> onAction(CartAction.DecreaseQuantity(id, quantity)) },
+                    onIncreseQuantity = {id, quantity -> onAction(CartAction.IncreaseQuantity(
+                        id, quantity
+                    )) },
+                    onDecreseQuantity = {id, quantity -> onAction(CartAction.DecreaseQuantity(
+                        id, quantity
+                    )) },
                     onRemove = {id -> onAction(CartAction.RemoveCartItem(id))}
                 )
             }
         }
         if (state.cartItems.isNotEmpty()) {
             CartSummaryCard(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .testTag(CartTestTags.SUMMARY_CARD),
                 summary = state.summary,
                 currencyFormatter = currencyFormatter
             )
@@ -76,21 +87,21 @@ fun SuccesssContent(
 @Composable
 private fun CartItemsEmptyContent(modifier: Modifier = Modifier) {
     Column(
-        modifier.fillMaxSize(),
+        modifier.fillMaxSize().testTag(CartTestTags.EMPTY_CART),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(text = "👛", style = MaterialTheme.typography.displayLarge)
+        Text(text = CartStr.ICON_EMPTY_CART, style = MaterialTheme.typography.displayLarge)
         Spacer(Modifier.height(16.dp))
         Text(
-            text = "Tu carrito está vacío",
+            text = CartStr.EMPTY_CART_MESSAGE,
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.Bold
         )
         Spacer(Modifier.height(16.dp))
         Text(
-            text = "Agrega productos para comenzar a comprar",
+            text = CartStr.EMPTY_CART_SUBTITLE,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
         )
