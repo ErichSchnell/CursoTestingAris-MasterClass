@@ -1,8 +1,7 @@
 package com.erichschnell.testingapp.domain.usecases
 
-import coil3.util.CoilUtils.result
-import com.erichschnell.testingapp.builders.product
-import com.erichschnell.testingapp.builders.promotion
+import com.erichschnell.testingapp.core.builders.product
+import com.erichschnell.testingapp.core.builders.promotion
 import com.erichschnell.testingapp.fakes.FakeProductRepository
 import com.erichschnell.testingapp.fakes.FakePromotionRepository
 import com.erichschnell.testingapp.fakes.FakeSystemClock

@@ -1,4 +1,4 @@
-package com.erichschnell.testingapp.builders
+package com.erichschnell.testingapp.core.builders
 
 import com.erichschnell.testingapp.domain.models.Product
 

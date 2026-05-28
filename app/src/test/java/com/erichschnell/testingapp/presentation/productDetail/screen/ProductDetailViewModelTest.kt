@@ -1,7 +1,7 @@
 package com.erichschnell.testingapp.presentation.productDetail.screen
 
 import app.cash.turbine.test
-import com.erichschnell.testingapp.builders.product
+import com.erichschnell.testingapp.core.builders.product
 import com.erichschnell.testingapp.core.MainDispatcherRule
 import com.erichschnell.testingapp.domain.core.model.AppError
 import com.erichschnell.testingapp.domain.repository.CartRepository

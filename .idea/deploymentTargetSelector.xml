@@ -6,23 +6,19 @@
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="firstUiTest()">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DialogSelection />
-      </SelectionState>
       <SelectionState runConfigName="SettingScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="givenDedaultSettingsState_whenRendered_thenShowsFilterAndAppearanceSection()">
+      <SelectionState runConfigName="ProductListScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="givenDefaultSettingsState_whenRendered_thenShowsFilterAndAppearanceSection()">
+      <SelectionState runConfigName="givenRendered_whenSelectACategory_thenOnlyShowProductsOfThisCategory()">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="givenSettingsRendered_whenBackClicked_thenOnBackIsCalled()">
+      <SelectionState runConfigName="givenRendered_whenShowFilterSelected_thenShowCardFilters()">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>

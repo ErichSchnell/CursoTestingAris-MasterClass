@@ -1,5 +1,6 @@
 package com.erichschnell.testingapp.presentation.productList.components
 
+import android.R.attr.category
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,11 +16,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.erichschnell.testingapp.domain.models.SortOption
 import com.erichschnell.testingapp.domain.models.SortOption.DISCOUNT
 import com.erichschnell.testingapp.domain.models.SortOption.PRICE_ASC
 import com.erichschnell.testingapp.domain.models.SortOption.PRICE_DESC
+import com.erichschnell.testingapp.presentation.productList.models.ProductListStr
+import com.erichschnell.testingapp.presentation.productList.models.ProductListTestTags
 import com.erichschnell.testingapp.presentation.productList.models.ProductListUiState
 
 @Composable
@@ -39,7 +43,7 @@ fun FiltersMenu(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                "Categorias",
+                ProductListStr.CATEGORIES,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -48,12 +52,14 @@ fun FiltersMenu(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 FilterChip(
+                    modifier = Modifier.testTag(ProductListTestTags.productListCategory(null)),
                     selected = state.selectedCategory == null,
                     onClick = { onCategorySelected(null) },
-                    label = { Text("Todas", style = MaterialTheme.typography.labelSmall) }
+                    label = { Text(ProductListStr.ALL_CATEGORIES, style = MaterialTheme.typography.labelSmall) }
                 )
                 state.categories.forEach { category ->
                     FilterChip(
+                        modifier = Modifier.testTag(ProductListTestTags.productListCategory(category)),
                         selected = category.equals(state.selectedCategory, ignoreCase = true),
                         onClick = { onCategorySelected(category) },
                         label = { Text(category, style = MaterialTheme.typography.labelSmall) }
@@ -62,7 +68,7 @@ fun FiltersMenu(
             }
             HorizontalDivider()
             Text(
-                "Ordenar por",
+                ProductListStr.ORDER_BY,
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -71,19 +77,22 @@ fun FiltersMenu(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 FilterChip(
+                    modifier = Modifier.testTag(ProductListTestTags.productListSortOption(PRICE_ASC)),
                     selected = state.sortOption == PRICE_ASC,
                     onClick = { onSortSelected(PRICE_ASC) },
-                    label = { Text("Precio ↑", style = MaterialTheme.typography.labelSmall) }
+                    label = { Text(ProductListStr.ORDER_BY_PRICE_ASC, style = MaterialTheme.typography.labelSmall) }
                 )
                 FilterChip(
+                    modifier = Modifier.testTag(ProductListTestTags.productListSortOption(PRICE_DESC)),
                     selected = state.sortOption == PRICE_DESC,
                     onClick = { onSortSelected(PRICE_DESC) },
-                    label = { Text("Precio ↓", style = MaterialTheme.typography.labelSmall) }
+                    label = { Text(ProductListStr.ORDER_BY_PRICE_DESC, style = MaterialTheme.typography.labelSmall) }
                 )
                 FilterChip(
+                    modifier = Modifier.testTag(ProductListTestTags.productListSortOption(DISCOUNT)),
                     selected = state.sortOption == DISCOUNT,
                     onClick = { onSortSelected(DISCOUNT) },
-                    label = { Text("Descuento ↑↓", style = MaterialTheme.typography.labelSmall) }
+                    label = { Text(ProductListStr.ORDER_BY_DISCOUNT, style = MaterialTheme.typography.labelSmall) }
                 )
             }
         }

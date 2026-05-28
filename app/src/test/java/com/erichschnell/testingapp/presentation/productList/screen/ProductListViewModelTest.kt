@@ -1,7 +1,7 @@
 package com.erichschnell.testingapp.presentation.productList.screen
 
 import app.cash.turbine.test
-import com.erichschnell.testingapp.builders.product
+import com.erichschnell.testingapp.core.builders.product
 import com.erichschnell.testingapp.core.MainDispatcherRule
 import com.erichschnell.testingapp.domain.models.SortOption
 import com.erichschnell.testingapp.domain.repository.ProductRepository

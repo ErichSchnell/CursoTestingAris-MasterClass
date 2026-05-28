@@ -1,6 +1,6 @@
 package com.erichschnell.testingapp.domain.ex
 
-import com.erichschnell.testingapp.builders.promotion
+import com.erichschnell.testingapp.core.builders.promotion
 import com.erichschnell.testingapp.domain.models.Promotion
 import org.junit.Assert.*
 import org.junit.Test

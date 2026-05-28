@@ -1,14 +1,11 @@
 package com.erichschnell.testingapp.domain.usecases
 
-import coil3.util.CoilUtils.result
-import com.erichschnell.testingapp.builders.product
-import com.erichschnell.testingapp.builders.promotion
-import com.erichschnell.testingapp.domain.repository.ProductRepository
+import com.erichschnell.testingapp.core.builders.product
+import com.erichschnell.testingapp.core.builders.promotion
 import com.erichschnell.testingapp.fakes.FakeProductRepository
 import com.erichschnell.testingapp.fakes.FakePromotionRepository
 import com.erichschnell.testingapp.fakes.FakeSettingRepository
 import com.erichschnell.testingapp.fakes.FakeSystemClock
-import io.mockk.mockk
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*

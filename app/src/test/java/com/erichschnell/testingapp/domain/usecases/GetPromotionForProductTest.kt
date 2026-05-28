@@ -1,7 +1,7 @@
 package com.erichschnell.testingapp.domain.usecases
 
-import com.erichschnell.testingapp.builders.product
-import com.erichschnell.testingapp.builders.promotion
+import com.erichschnell.testingapp.core.builders.product
+import com.erichschnell.testingapp.core.builders.promotion
 import com.erichschnell.testingapp.domain.models.ProductPromotion
 import com.erichschnell.testingapp.domain.models.PromotionType
 import org.junit.Assert.*

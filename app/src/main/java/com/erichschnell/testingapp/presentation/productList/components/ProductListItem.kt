@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -35,6 +36,8 @@ import coil3.compose.AsyncImage
 import com.erichschnell.testingapp.R
 import com.erichschnell.testingapp.domain.models.ProductPromotion
 import com.erichschnell.testingapp.domain.models.ProductWithPromotion
+import com.erichschnell.testingapp.presentation.productList.models.ProductListStr
+import com.erichschnell.testingapp.presentation.productList.models.ProductListTestTags
 import java.util.Locale
 
 @Composable
@@ -48,7 +51,7 @@ fun ProductListEmpty(modifier: Modifier = Modifier) {
         ) {
             Text("🔍", style = MaterialTheme.typography.displayMedium)
             Text(
-                "No se encontraron productos",
+                ProductListStr.EMPTY_CART,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.tertiary
             )
@@ -85,6 +88,7 @@ private fun ProductItem(item: ProductWithPromotion, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
+            .testTag(ProductListTestTags.productListProductsWithPromotion(product.id))
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         shape = RoundedCornerShape(12.dp),

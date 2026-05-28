@@ -1,6 +1,6 @@
 package com.erichschnell.testingapp.domain.usecases
 
-import com.erichschnell.testingapp.builders.product
+import com.erichschnell.testingapp.core.builders.product
 import com.erichschnell.testingapp.domain.core.model.AppError
 import com.erichschnell.testingapp.domain.repository.CartRepository
 import com.erichschnell.testingapp.domain.repository.ProductRepository

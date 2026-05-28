@@ -1,8 +1,8 @@
 package com.erichschnell.testingapp.presentation.cart.screen
 
 import app.cash.turbine.test
-import com.erichschnell.testingapp.builders.cartItem
-import com.erichschnell.testingapp.builders.product
+import com.erichschnell.testingapp.core.builders.cartItem
+import com.erichschnell.testingapp.core.builders.product
 import com.erichschnell.testingapp.core.MainDispatcherRule
 import com.erichschnell.testingapp.domain.repository.ProductRepository
 import com.erichschnell.testingapp.domain.usecases.GetCartItemsWithPromotionsUseCase
