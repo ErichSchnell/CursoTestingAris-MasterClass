@@ -14,9 +14,5 @@ class FakeSystemClock : Clock {
         currentTime = currentTime.plusSeconds(seconds)
     }
 
-    fun retrocedTime(seconds: Long) {
-        currentTime = currentTime.minusSeconds(seconds)
-    }
-
     override fun now(): Instant = currentTime
 }

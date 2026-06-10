@@ -108,11 +108,6 @@ class GetProductsUseCaseTest {
     fun `given show promotion in stock only when stock is 0 then promotion should not be returned`() =
         runTest {
             // Given
-            val product =
-                product {
-                    withId("product-id")
-                    withStock(0)
-                }
             val setting = FakeSettingRepository().apply { setInStockOnly(true) }
 
             // When

@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.erichschnell.testingapp.domain.models.Product
 import com.erichschnell.testingapp.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.presentation.core.components.MarketTopAppBar
