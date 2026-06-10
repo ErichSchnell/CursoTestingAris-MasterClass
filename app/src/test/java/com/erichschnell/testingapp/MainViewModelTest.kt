@@ -6,22 +6,18 @@ import com.erichschnell.testingapp.domain.core.model.ThemeMode
 import com.erichschnell.testingapp.domain.repository.SettingsRepository
 import com.erichschnell.testingapp.fakes.FakeSettingRepository
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
 class MainViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private fun createViewModel(
-        fakeSettingRepo: SettingsRepository = FakeSettingRepository()
-    ): MainViewModel {
-        return MainViewModel(
-            settingsRepository = fakeSettingRepo
+    private fun createViewModel(fakeSettingRepo: SettingsRepository = FakeSettingRepository()): MainViewModel =
+        MainViewModel(
+            settingsRepository = fakeSettingRepo,
         )
-    }
 
     /*
     ------------------------------------- HECHO --------------------------------
@@ -31,7 +27,7 @@ class MainViewModelTest {
 
     @Test
     fun `given theme mode when initialized then emits success state`() =
-        runTest( mainDispatcherRule.scheduler ){
+        runTest(mainDispatcherRule.scheduler) {
             val fakeSettingRepo = FakeSettingRepository().apply { setThemeMode(ThemeMode.DARK) }
             val viewModel = createViewModel(fakeSettingRepo)
 
@@ -45,7 +41,7 @@ class MainViewModelTest {
 
     @Test
     fun `given theme mode when theme mode changed then update theme mode in repo and update ui state`() =
-        runTest( mainDispatcherRule.scheduler ){
+        runTest(mainDispatcherRule.scheduler) {
             val fakeSettingRepo = FakeSettingRepository().apply { setThemeMode(ThemeMode.DARK) }
             val viewModel = createViewModel(fakeSettingRepo)
 
@@ -60,5 +56,4 @@ class MainViewModelTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
 }

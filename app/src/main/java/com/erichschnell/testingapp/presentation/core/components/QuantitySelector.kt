@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.erichschnell.testingapp.presentation.cart.model.CartTestTags
 
 @Composable
 fun QuantitySelector(
@@ -36,42 +35,42 @@ fun QuantitySelector(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(
             modifier = Modifier.size(36.dp).testTag(subtractQuantityTestTag),
             onClick = onDecreaseQuantity,
-            enabled = canDecrease
-        )  {
+            enabled = canDecrease,
+        ) {
             Icon(
                 Icons.Default.Remove,
                 contentDescription = "Restar cantidad",
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
         }
         Surface(
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primaryContainer,
-            modifier = Modifier.size(36.dp)
+            modifier = Modifier.size(36.dp),
         ) {
-            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()){
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
                 Text(
                     text = quantity,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }
         IconButton(
             modifier = Modifier.size(36.dp).testTag(addQuantityTestTag),
             onClick = onIncreaseQuantity,
-            enabled = canIncrease
-        )  {
+            enabled = canIncrease,
+        ) {
             Icon(
                 Icons.Default.Add,
                 contentDescription = "Agregar cantidad",
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
         }
     }

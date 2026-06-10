@@ -1,6 +1,5 @@
 package com.erichschnell.testingapp.presentation.cart.screen
 
-import android.R.attr.action
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -12,9 +11,7 @@ import androidx.compose.ui.test.swipeRight
 import com.erichschnell.testingapp.core.mothers.CartItemMother
 import com.erichschnell.testingapp.core.mothers.ProductMother
 import com.erichschnell.testingapp.core.mothers.uistate.CartUiMother
-import com.erichschnell.testingapp.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.presentation.cart.model.CartAction
-import com.erichschnell.testingapp.presentation.cart.model.CartItemWithPromotion
 import com.erichschnell.testingapp.presentation.cart.model.CartStr
 import com.erichschnell.testingapp.presentation.cart.model.CartTestTags
 import com.erichschnell.testingapp.presentation.cart.model.CartUiState
@@ -24,7 +21,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class CartScreenTest {
-
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
@@ -37,7 +33,7 @@ class CartScreenTest {
             CartScreenContent(
                 uiState = uiState,
                 onBack = onBack,
-                onAction = onAction
+                onAction = onAction,
             )
         }
     }
@@ -53,21 +49,25 @@ class CartScreenTest {
         composeRule.onNodeWithText(CartStr.SUMMARY_DISCOUNT).assertIsDisplayed()
         composeRule.onNodeWithText(CartStr.SUMMARY_TOTAL).assertIsDisplayed()
 
-        composeRule.onNodeWithText(
-            ProductMother.bread().name
-        ).assertIsDisplayed()
+        composeRule
+            .onNodeWithText(
+                ProductMother.bread().name,
+            ).assertIsDisplayed()
 
-        composeRule.onNodeWithText(
-            ProductMother.eggs().name
-        ).assertIsDisplayed()
+        composeRule
+            .onNodeWithText(
+                ProductMother.eggs().name,
+            ).assertIsDisplayed()
 
-        composeRule.onNodeWithText(
-            ProductMother.milk().name
-        ).assertIsDisplayed()
+        composeRule
+            .onNodeWithText(
+                ProductMother.milk().name,
+            ).assertIsDisplayed()
 
-        composeRule.onNodeWithText(
-            ProductMother.soda().name
-        ).assertIsDisplayed()
+        composeRule
+            .onNodeWithText(
+                ProductMother.soda().name,
+            ).assertIsDisplayed()
     }
 
     @Test
@@ -107,15 +107,16 @@ class CartScreenTest {
         createScreen(
             uiState = CartUiMother.success(),
             onAction = {
-                if (it is CartAction.IncreaseQuantity){
+                if (it is CartAction.IncreaseQuantity) {
                     emition = it.quantity + 1
                 }
-            }
+            },
         )
 
-        composeRule.onNodeWithTag(
-            CartTestTags.addQuantity(CartItemMother.bread().productId)
-        ).performClick()
+        composeRule
+            .onNodeWithTag(
+                CartTestTags.addQuantity(CartItemMother.bread().productId),
+            ).performClick()
 
         assertEquals(CartItemMother.bread().quantity + 1, emition)
     }
@@ -127,15 +128,16 @@ class CartScreenTest {
         createScreen(
             uiState = CartUiMother.success(),
             onAction = {
-                if (it is CartAction.DecreaseQuantity){
+                if (it is CartAction.DecreaseQuantity) {
                     emition = it.quantity - 1
                 }
-            }
+            },
         )
 
-        composeRule.onNodeWithTag(
-            CartTestTags.subtractQuantity(CartItemMother.bread().productId)
-        ).performClick()
+        composeRule
+            .onNodeWithTag(
+                CartTestTags.subtractQuantity(CartItemMother.bread().productId),
+            ).performClick()
 
         assertEquals(CartItemMother.bread().quantity - 1, emition)
     }
@@ -147,23 +149,24 @@ class CartScreenTest {
         createScreen(
             uiState = CartUiMother.success(),
             onAction = {
-                if (it is CartAction.RemoveCartItem){
+                if (it is CartAction.RemoveCartItem) {
                     emition = it.productId
                 }
-            }
+            },
         )
 
-        composeRule.onNodeWithTag(
-            CartTestTags.removeItem(CartItemMother.bread().productId)
-        ).performTouchInput{
-            swipeRight()
-        }
+        composeRule
+            .onNodeWithTag(
+                CartTestTags.removeItem(CartItemMother.bread().productId),
+            ).performTouchInput {
+                swipeRight()
+            }
 
-        composeRule.waitUntil(timeoutMillis = 5_000){
+        composeRule.waitUntil(timeoutMillis = 5_000) {
             emition != null
         }
 
-        assertEquals(CartItemMother.bread().productId,emition)
+        assertEquals(CartItemMother.bread().productId, emition)
     }
 
     @Test
@@ -172,14 +175,14 @@ class CartScreenTest {
 
         createScreen(
             uiState = CartUiState.Error("Error"),
-            onBack = { emition = true }
+            onBack = { emition = true },
         )
 
-        composeRule.onNodeWithTag(
-            CartTestTags.ERROR_RETRY
-        ).performClick()
+        composeRule
+            .onNodeWithTag(
+                CartTestTags.ERROR_RETRY,
+            ).performClick()
 
         assertTrue(emition)
     }
-
 }

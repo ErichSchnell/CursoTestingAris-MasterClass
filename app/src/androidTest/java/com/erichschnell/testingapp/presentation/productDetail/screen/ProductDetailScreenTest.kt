@@ -14,23 +14,24 @@ import com.erichschnell.testingapp.presentation.productDetail.models.ProductDeta
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiAction
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiState
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailsStr
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
 class ProductDetailScreenTest {
-
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     private fun createScreen(
-        uiState: ProductDetailUiState = ProductDetailUiState(
-            item = ProductWithPromotion(
-                product = ProductMother.bread(),
-                promotion = null
+        uiState: ProductDetailUiState =
+            ProductDetailUiState(
+                item =
+                    ProductWithPromotion(
+                        product = ProductMother.bread(),
+                        promotion = null,
+                    ),
+                isLoading = false,
             ),
-            isLoading = false
-        ),
         onBack: () -> Unit = {},
         onAction: (ProductDetailUiAction) -> Unit = {},
     ) {
@@ -38,7 +39,7 @@ class ProductDetailScreenTest {
             ProductDetailScreenContent(
                 uiState = uiState,
                 onBack = onBack,
-                onAction = onAction
+                onAction = onAction,
             )
         }
     }
@@ -69,7 +70,7 @@ class ProductDetailScreenTest {
                 if (it == ProductDetailUiAction.AddToCart) {
                     addToCartCalled = true
                 }
-            }
+            },
         )
 
         composeRule.onNodeWithTag(ProductDetailTestTags.ADD_TO_CART_BUTTON).performClick()
@@ -78,15 +79,16 @@ class ProductDetailScreenTest {
 
     @Test
     fun givenItemWithoutStock_whenRendered_thenWithoutStock() {
-
         createScreen(
-            uiState = ProductDetailUiState(
-                item = ProductWithPromotion(
-                    product = ProductMother.bread().copy(stock = 0),
-                    promotion = null
+            uiState =
+                ProductDetailUiState(
+                    item =
+                        ProductWithPromotion(
+                            product = ProductMother.bread().copy(stock = 0),
+                            promotion = null,
+                        ),
+                    isLoading = false,
                 ),
-                isLoading = false
-            )
         )
 
         composeRule.onNodeWithTag(ProductDetailTestTags.WITHOUT_STOCK).assertIsDisplayed()
@@ -97,7 +99,7 @@ class ProductDetailScreenTest {
     fun givenRendered_whenClickOnBack_thenEmitCallback() {
         var emition = false
         createScreen(
-            onBack = { emition = true }
+            onBack = { emition = true },
         )
 
         composeRule.onNodeWithTag(CoreTestTag.TOP_APP_BAR_BACK_BUTTON).performClick()
@@ -108,21 +110,22 @@ class ProductDetailScreenTest {
     @Test
     fun givenItemWithPercentPromotion_whenRendered_thenShowPercentPromotion() {
         createScreen(
-            uiState = ProductDetailUiState(
-                item = ProductWithPromotion(
-                    product = ProductMother.bread().copy(stock = 4),
-                    promotion = ProductPromotion.Percent(
-                        percent = 10.0,
-                        discountedPrice = 10.0,
-                        label = "10 porciento de descuento"
-                    )
+            uiState =
+                ProductDetailUiState(
+                    item =
+                        ProductWithPromotion(
+                            product = ProductMother.bread().copy(stock = 4),
+                            promotion =
+                                ProductPromotion.Percent(
+                                    percent = 10.0,
+                                    discountedPrice = 10.0,
+                                    label = "10 porciento de descuento",
+                                ),
+                        ),
+                    isLoading = false,
                 ),
-                isLoading = false
-            )
         )
 
         composeRule.onNodeWithText(ProductDetailsStr.discoutPercent(10)).assertIsDisplayed()
-
     }
-
 }

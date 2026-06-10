@@ -1,6 +1,5 @@
 package com.erichschnell.testingapp.presentation.productDetail.screen.content
 
-import android.R.attr.text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,42 +25,42 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.erichschnell.testingapp.R
-import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiAction
-import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiState
 import com.erichschnell.testingapp.domain.models.ProductPromotion
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiState
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailsStr
 
 @Composable
 fun ProductDetailSuccessContent(
     modifier: Modifier = Modifier,
-    state: ProductDetailUiState
+    state: ProductDetailUiState,
 ) {
     Column(
-        modifier
+        modifier,
     ) {
         state.item?.let {
             val product = it.product
             val promotion = it.promotion
-            val discountPrice = when(promotion) {
-                is ProductPromotion.Percent -> promotion.discountedPrice
-                is ProductPromotion.BuyXPayY -> null
-                null -> null
-            }
+            val discountPrice =
+                when (promotion) {
+                    is ProductPromotion.Percent -> promotion.discountedPrice
+                    is ProductPromotion.BuyXPayY -> null
+                    null -> null
+                }
 
             Column(
                 Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
                 ) {
                     Column(
                         Modifier.padding(24.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         AsyncImage(
                             model = product.imageUrl,
@@ -74,60 +73,60 @@ fun ProductDetailSuccessContent(
                         Text(
                             text = product.name,
                             style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
                         )
 
                         Surface(
                             shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colorScheme.secondaryContainer
+                            color = MaterialTheme.colorScheme.secondaryContainer,
                         ) {
                             Text(
                                 text = product.category,
-                                modifier = Modifier.padding(
-                                    horizontal = 8.dp,
-                                    vertical = 6.dp
-                                ),
+                                modifier =
+                                    Modifier.padding(
+                                        horizontal = 8.dp,
+                                        vertical = 6.dp,
+                                    ),
                                 style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
                             )
                         }
 
-                        if (product.description.isNotBlank()){
+                        if (product.description.isNotBlank()) {
                             Text(text = product.description)
                         }
 
                         HorizontalDivider()
 
-                        if (discountPrice != null){
+                        if (discountPrice != null) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
                                     product.price.toString(),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    textDecoration = TextDecoration.LineThrough
+                                    textDecoration = TextDecoration.LineThrough,
                                 )
                                 Text(
                                     discountPrice.toString(),
                                     style = MaterialTheme.typography.displaySmall,
                                     color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
                                 )
                             }
 
                             Surface(
                                 shape = RoundedCornerShape(8.dp),
-                                color = MaterialTheme.colorScheme.errorContainer
+                                color = MaterialTheme.colorScheme.errorContainer,
                             ) {
                                 val percent = (promotion as ProductPromotion.Percent).percent.toInt()
                                 Text(
                                     text = ProductDetailsStr.discoutPercent(percent),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onErrorContainer
-
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
                                 )
                             }
                         } else {
@@ -135,21 +134,20 @@ fun ProductDetailSuccessContent(
                                 text = product.price.toString(),
                                 style = MaterialTheme.typography.displaySmall,
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         }
 
                         if (promotion is ProductPromotion.BuyXPayY) {
                             Surface(
                                 shape = RoundedCornerShape(8.dp),
-                                color = MaterialTheme.colorScheme.errorContainer
+                                color = MaterialTheme.colorScheme.errorContainer,
                             ) {
                                 Text(
                                     text = promotion.label,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onErrorContainer
-
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
                                 )
                             }
                         }
@@ -157,33 +155,38 @@ fun ProductDetailSuccessContent(
                         HorizontalDivider()
 
                         val hasStock = product.stock > 0
-                        val colorStock = if (hasStock) {
-                            MaterialTheme.colorScheme.primaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.errorContainer
-                        }
+                        val colorStock =
+                            if (hasStock) {
+                                MaterialTheme.colorScheme.primaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.errorContainer
+                            }
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
                                 text = ProductDetailsStr.STOCK_AVAILABLE,
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                             Surface(
                                 shape = RoundedCornerShape(12.dp),
-                                color = colorStock
+                                color = colorStock,
                             ) {
                                 Text(
-                                    text = if (hasStock) ProductDetailsStr.stockAvailable(product.stock)
-                                    else ProductDetailsStr.WITHOUT_STOCK,
+                                    text =
+                                        if (hasStock) {
+                                            ProductDetailsStr.stockAvailable(product.stock)
+                                        } else {
+                                            ProductDetailsStr.WITHOUT_STOCK
+                                        },
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
                                 )
                             }
                         }
@@ -191,6 +194,5 @@ fun ProductDetailSuccessContent(
                 }
             }
         }
-
     }
 }

@@ -1,14 +1,14 @@
 package com.erichschnell.testingapp.presentation.productList.screen
 
 import app.cash.turbine.test
-import com.erichschnell.testingapp.core.builders.product
 import com.erichschnell.testingapp.core.MainDispatcherRule
+import com.erichschnell.testingapp.core.builders.product
 import com.erichschnell.testingapp.domain.models.SortOption
 import com.erichschnell.testingapp.domain.repository.ProductRepository
 import com.erichschnell.testingapp.domain.usecases.GetCartItemsQuantityUseCase
 import com.erichschnell.testingapp.domain.usecases.GetProductsUseCase
 import com.erichschnell.testingapp.domain.usecases.GetPromotionForProduct
-import com.erichschnell.testingapp.fakes.FakeCartRepository
+import com.erichschnell.testingapp.fakes.FakeCartItemRepository
 import com.erichschnell.testingapp.fakes.FakeProductRepository
 import com.erichschnell.testingapp.fakes.FakePromotionRepository
 import com.erichschnell.testingapp.fakes.FakeSettingRepository
@@ -17,12 +17,12 @@ import com.erichschnell.testingapp.presentation.productList.models.ProductListAc
 import com.erichschnell.testingapp.presentation.productList.models.ProductListUiState
 import com.erichschnell.testingapp.stubs.FailingProductRepositoryStub
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
 class ProductListViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
@@ -31,23 +31,25 @@ class ProductListViewModelTest {
         fakePromotionRepo: FakePromotionRepository = FakePromotionRepository(),
         fakeSettingRepo: FakeSettingRepository = FakeSettingRepository(),
         fakeClock: FakeSystemClock = FakeSystemClock(),
-        fakeCartRepo: FakeCartRepository = FakeCartRepository()
+        fakeCartRepo: FakeCartItemRepository = FakeCartItemRepository(),
     ): ProductListViewModel {
-        val getProductsUseCase = GetProductsUseCase(
-            productRepository = fakeProductRepo,
-            promotionRepository = fakePromotionRepo,
-            getPromotionForProduct = GetPromotionForProduct(),
-            settingsRepository = fakeSettingRepo,
-            clock = fakeClock,
-        )
+        val getProductsUseCase =
+            GetProductsUseCase(
+                productRepository = fakeProductRepo,
+                promotionRepository = fakePromotionRepo,
+                getPromotionForProduct = GetPromotionForProduct(),
+                settingsRepository = fakeSettingRepo,
+                clock = fakeClock,
+            )
         val settingRepo = fakeSettingRepo
-        val getCartItemsQuantityUseCase = GetCartItemsQuantityUseCase(
-            cartRepository = fakeCartRepo
-        )
+        val getCartItemsQuantityUseCase =
+            GetCartItemsQuantityUseCase(
+                cartRepository = fakeCartRepo,
+            )
         return ProductListViewModel(
             getProductsUseCase = getProductsUseCase,
             settingsRepository = settingRepo,
-            getCartItemsQuantityUseCase = getCartItemsQuantityUseCase
+            getCartItemsQuantityUseCase = getCartItemsQuantityUseCase,
         )
     }
 
@@ -71,9 +73,21 @@ class ProductListViewModelTest {
     @Test
     fun `given selected category when set category then filters products`() =
         runTest(mainDispatcherRule.scheduler) {
-            val p1 = product { withId("p1"); withCategory("category1") }
-            val p2 = product { withId("p2"); withCategory("category1") }
-            val p3 = product { withId("p3"); withCategory("category2") }
+            val p1 =
+                product {
+                    withId("p1")
+                    withCategory("category1")
+                }
+            val p2 =
+                product {
+                    withId("p2")
+                    withCategory("category1")
+                }
+            val p3 =
+                product {
+                    withId("p3")
+                    withCategory("category2")
+                }
             val fakeRepo = FakeProductRepository().apply { setProducts(listOf(p1, p2, p3)) }
 
             val viewModel = createViewModel(fakeProductRepo = fakeRepo)
@@ -97,9 +111,21 @@ class ProductListViewModelTest {
     @Test
     fun `given price asc sort option when set sort option then sorts by price effective price`() =
         runTest(mainDispatcherRule.scheduler) {
-            val p2 = product { withId("p2"); withPrice(150.0) }
-            val p1 = product { withId("p1"); withPrice(100.0) }
-            val p3 = product { withId("p3"); withPrice(200.0) }
+            val p2 =
+                product {
+                    withId("p2")
+                    withPrice(150.0)
+                }
+            val p1 =
+                product {
+                    withId("p1")
+                    withPrice(100.0)
+                }
+            val p3 =
+                product {
+                    withId("p3")
+                    withPrice(200.0)
+                }
             val fakeRepo = FakeProductRepository().apply { setProducts(listOf(p1, p2, p3)) }
 
             val viewModel = createViewModel(fakeProductRepo = fakeRepo)
@@ -136,9 +162,4 @@ class ProductListViewModelTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
-
-
-
-
 }

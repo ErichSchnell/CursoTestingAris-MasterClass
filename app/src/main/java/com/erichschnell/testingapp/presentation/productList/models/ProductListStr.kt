@@ -1,7 +1,6 @@
 package com.erichschnell.testingapp.presentation.productList.models
 
 object ProductListStr {
-
     const val EMPTY_CART = "No se encontraron productos"
 
     const val CATEGORIES = "Categorias"
@@ -12,5 +11,4 @@ object ProductListStr {
     const val ORDER_BY_DISCOUNT = "Descuento ↑↓"
 
     fun sizeProducts(size: Int) = "$size productos"
-
 }

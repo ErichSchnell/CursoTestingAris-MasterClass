@@ -12,10 +12,12 @@ import com.erichschnell.testingapp.data.local.database.entity.PromotionEntity
 @Database(
     entities = [ProductEntity::class, PromotionEntity::class, CartItemEntity::class],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
-abstract class MiniMarketDataBase: RoomDatabase() {
+abstract class MiniMarketDataBase : RoomDatabase() {
     abstract fun productDao(): ProductDao
+
     abstract fun promotionDao(): PromotionDao
+
     abstract fun cartItemDao(): CartItemDao
 }

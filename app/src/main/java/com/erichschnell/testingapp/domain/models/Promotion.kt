@@ -2,17 +2,17 @@ package com.erichschnell.testingapp.domain.models
 
 import java.time.Instant
 
-enum class PromotionType{
+enum class PromotionType {
     PERCENT,
-    BUY_X_PAY_Y
+    BUY_X_PAY_Y,
 }
 
 data class Promotion(
-    val id:String,
-    val type:PromotionType,
-    val productIds:List<String>,
-    val value:Double,
-    val buyQuantity:Int? = null,
+    val id: String,
+    val type: PromotionType,
+    val productIds: List<String>,
+    val value: Double,
+    val buyQuantity: Int? = null,
     val startTime: Instant,
-    val endTime: Instant
+    val endTime: Instant,
 )

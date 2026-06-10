@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.erichschnell.testingapp.data.DefaultDispatchersProvider
@@ -35,51 +34,39 @@ private val Context.testingDatastore: DataStore<Preferences> by preferencesDataS
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [DataModule::class]
+    replaces = [DataModule::class],
 )
 object TestDataModule {
+    @Provides
+    @Singleton
+    fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider = defaultDispatchersProvider
 
     @Provides
     @Singleton
-    fun provideDispatchersProvider(defaultDispatchersProvider: DefaultDispatchersProvider): DispatchersProvider{
-        return defaultDispatchersProvider
-    }
+    fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository = productRepositoryImpl
 
     @Provides
     @Singleton
-    fun provideProductRepository(productRepositoryImpl: ProductRepositoryImpl): ProductRepository {
-        return productRepositoryImpl
-    }
+    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository = promotionRepositoryImpl
+
+    @Provides
+    fun providesProductDao(database: MiniMarketDataBase): ProductDao = database.productDao()
+
+    @Provides
+    fun providesPromotionDao(database: MiniMarketDataBase): PromotionDao = database.promotionDao()
+
+    @Provides
+    fun providesCartItemDao(database: MiniMarketDataBase): CartItemDao = database.cartItemDao()
 
     @Provides
     @Singleton
-    fun providePromotionRepository(promotionRepositoryImpl: PromotionRepositoryImpl): PromotionRepository {
-        return promotionRepositoryImpl
-    }
-
-    @Provides
-    fun providesProductDao(database: MiniMarketDataBase): ProductDao {
-        return database.productDao()
-    }
-
-    @Provides
-    fun providesPromotionDao(database: MiniMarketDataBase): PromotionDao {
-        return database.promotionDao()
-    }
-
-    @Provides
-    fun providesCartItemDao(database: MiniMarketDataBase): CartItemDao {
-        return database.cartItemDao()
-    }
-
-    @Provides
-    @Singleton
-    fun providesDatabase(): MiniMarketDataBase{
+    fun providesDatabase(): MiniMarketDataBase {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        return Room.inMemoryDatabaseBuilder(
-            context = context,
-            klass = MiniMarketDataBase::class.java,
-        ).build()
+        return Room
+            .inMemoryDatabaseBuilder(
+                context = context,
+                klass = MiniMarketDataBase::class.java,
+            ).build()
     }
 
     @Provides
@@ -91,19 +78,13 @@ object TestDataModule {
 
     @Provides
     @Singleton
-    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository {
-        return settingsRepositoryImpl
-    }
+    fun provideSettingsRepository(settingsRepositoryImpl: SettingsRepositoryImpl): SettingsRepository = settingsRepositoryImpl
 
     @Provides
     @Singleton
-    fun provideCartItemRepository(cartItemRepositoryImpl: CartRepositoryImpl): CartRepository {
-        return cartItemRepositoryImpl
-    }
+    fun provideCartItemRepository(cartItemRepositoryImpl: CartRepositoryImpl): CartRepository = cartItemRepositoryImpl
 
     @Provides
     @Singleton
-    fun provideSystemClock(systemClock: SystemClock): Clock {
-        return systemClock
-    }
+    fun provideSystemClock(systemClock: SystemClock): Clock = systemClock
 }

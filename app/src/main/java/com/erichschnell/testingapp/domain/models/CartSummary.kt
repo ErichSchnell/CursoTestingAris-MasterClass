@@ -1,7 +1,7 @@
 package com.erichschnell.testingapp.domain.models
 
-data class CartSummary (
+data class CartSummary(
     val subtotal: Double,
     val discountsTotal: Double,
-    val finalTotal: Double
+    val finalTotal: Double,
 )

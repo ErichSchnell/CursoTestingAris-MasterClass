@@ -16,42 +16,42 @@ import com.erichschnell.testingapp.presentation.settings.screen.SettingScreen
 @Composable
 fun NavGraph() {
     val backStack = rememberNavBackStack(Screen.ProductList)
-    val entries = entryProvider<NavKey> {
-        entry<Screen.ProductList> {
-            ProductListScreen(
-                navigateToSettings = { backStack.add(Screen.Setting) },
-                navigateToProductDetail = { backStack.add(Screen.ProductDetail(it)) },
-                navigateToCart = { backStack.add(Screen.Cart) },
-            )
-        }
-        entry<Screen.Cart> {
-            CartScreen(
-                onBack = { backStack.removeLastOrNull() }
-            )
-        }
-        entry<Screen.Setting> {
-            SettingScreen(
-                onBack = { backStack.removeLastOrNull()}
-            )
-        }
-        entry<Screen.ProductDetail> {
-
-            val viewModel = hiltViewModel<ProductDetailViewModel>()
-
-            LaunchedEffect(Unit) {
-                viewModel.loadProduct(it.productId)
+    val entries =
+        entryProvider<NavKey> {
+            entry<Screen.ProductList> {
+                ProductListScreen(
+                    navigateToSettings = { backStack.add(Screen.Setting) },
+                    navigateToProductDetail = { backStack.add(Screen.ProductDetail(it)) },
+                    navigateToCart = { backStack.add(Screen.Cart) },
+                )
             }
+            entry<Screen.Cart> {
+                CartScreen(
+                    onBack = { backStack.removeLastOrNull() },
+                )
+            }
+            entry<Screen.Setting> {
+                SettingScreen(
+                    onBack = { backStack.removeLastOrNull() },
+                )
+            }
+            entry<Screen.ProductDetail> {
+                val viewModel = hiltViewModel<ProductDetailViewModel>()
 
-            ProductDetailScreen(
-                viewModel = viewModel,
-                onBack = { backStack.removeLastOrNull() }
-            )
+                LaunchedEffect(Unit) {
+                    viewModel.loadProduct(it.productId)
+                }
+
+                ProductDetailScreen(
+                    viewModel = viewModel,
+                    onBack = { backStack.removeLastOrNull() },
+                )
+            }
         }
-    }
 
     NavDisplay(
         backStack = backStack,
         entryProvider = entries,
-        onBack = {backStack.removeLastOrNull()}
+        onBack = { backStack.removeLastOrNull() },
     )
 }

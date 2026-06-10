@@ -7,5 +7,6 @@ object ProductDetailsStr {
     const val STOCK_AVAILABLE = "Stock disponible"
 
     fun stockAvailable(stock: Int) = "$stock unidades"
+
     fun discoutPercent(percent: Int) = "$percent% OFF"
 }

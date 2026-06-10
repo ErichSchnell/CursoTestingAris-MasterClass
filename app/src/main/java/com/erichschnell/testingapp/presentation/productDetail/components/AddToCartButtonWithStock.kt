@@ -26,32 +26,32 @@ import com.erichschnell.testingapp.presentation.productDetail.models.ProductDeta
 fun AddToCartButtonWithStock(
     modifier: Modifier = Modifier,
     isLoading: Boolean,
-    addToCart: () -> Unit = {}
+    addToCart: () -> Unit = {},
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         shadowElevation = 8.dp,
-        tonalElevation = 2.dp
+        tonalElevation = 2.dp,
     ) {
         Box(
-            Modifier.padding(16.dp)
-        )  {
+            Modifier.padding(16.dp),
+        ) {
             Button(
                 modifier = Modifier.fillMaxWidth().testTag(ProductDetailTestTags.ADD_TO_CART_BUTTON),
                 enabled = !isLoading,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                onClick = addToCart
+                onClick = addToCart,
             ) {
                 Icon(
                     Icons.Default.ShoppingCart,
                     contentDescription = ProductDetailsStr.ADD_PRODUCT,
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimary,
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = ProductDetailsStr.ADD_PRODUCT,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }

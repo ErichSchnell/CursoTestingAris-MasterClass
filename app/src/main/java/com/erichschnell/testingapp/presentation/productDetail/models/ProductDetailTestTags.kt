@@ -5,5 +5,4 @@ object ProductDetailTestTags {
     const val WITHOUT_STOCK = "PRODUCT_DETAILS_WITHOUT_STOCK"
 
     const val LOADING = "LOADING"
-
 }

@@ -28,5 +28,4 @@ interface CartItemDao {
 
     @Query("DELETE FROM cart_items")
     suspend fun clearCart()
-
 }

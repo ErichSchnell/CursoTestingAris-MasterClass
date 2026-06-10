@@ -2,12 +2,9 @@ package com.erichschnell.testingapp.presentation.productList.screen
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -27,10 +24,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ProductListScreenTest {
-
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
-    
+
     private fun createProductListScreen(
         uiState: ProductListUiState = ProductListUiStateMother.success(),
         showFilters: Boolean = true,
@@ -38,8 +34,8 @@ class ProductListScreenTest {
         onFilterClick: (Boolean) -> Unit = {},
         onSettingsSelected: () -> Unit = {},
         onCartSelected: () -> Unit = {},
-        onAction: (ProductListAction) -> Unit = {}
-    ){
+        onAction: (ProductListAction) -> Unit = {},
+    ) {
         composeRule.setContent {
             ProductListScreenContent(
                 uiState = uiState,
@@ -48,7 +44,7 @@ class ProductListScreenTest {
                 onFilterClick = onFilterClick,
                 onSettingsSelected = onSettingsSelected,
                 onCartSelected = onCartSelected,
-                onAction = onAction
+                onAction = onAction,
             )
         }
     }
@@ -99,71 +95,83 @@ class ProductListScreenTest {
     fun givenCategorySelected_whenRendered_thenMarkChipWithCategorySelected() {
         val category = ProductMother.milk().category
         createProductListScreen(
-            uiState = ProductListUiStateMother.success(
-                selectedCategory = category
-            )
+            uiState =
+                ProductListUiStateMother.success(
+                    selectedCategory = category,
+                ),
         )
 
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListCategory(category)
-        ).assertIsSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListCategory(category),
+            ).assertIsSelected()
     }
 
     @Test
     fun givenNotCategorySelected_whenRendered_thenMarkChipWithAllCategories() {
         createProductListScreen(
-            uiState = ProductListUiStateMother.success(
-                selectedCategory = null
-            )
+            uiState =
+                ProductListUiStateMother.success(
+                    selectedCategory = null,
+                ),
         )
 
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListCategory(null)
-        ).assertIsSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListCategory(null),
+            ).assertIsSelected()
     }
 
     @Test
     fun givenNotSortOptionSelected_whenRendered_thenNotMarkSorterChips() {
         createProductListScreen(
-            uiState = ProductListUiStateMother.success(
-                sortOption = SortOption.NONE
-            )
+            uiState =
+                ProductListUiStateMother.success(
+                    sortOption = SortOption.NONE,
+                ),
         )
 
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListSortOption(SortOption.PRICE_ASC)
-        ).assertIsNotSelected()
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListSortOption(SortOption.PRICE_DESC)
-        ).assertIsNotSelected()
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListSortOption(SortOption.DISCOUNT)
-        ).assertIsNotSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListSortOption(SortOption.PRICE_ASC),
+            ).assertIsNotSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListSortOption(SortOption.PRICE_DESC),
+            ).assertIsNotSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListSortOption(SortOption.DISCOUNT),
+            ).assertIsNotSelected()
     }
 
     @Test
     fun givenSortOptionSelected_whenRendered_thenMarkChipWithSortOptionSelected() {
         createProductListScreen(
-            uiState = ProductListUiStateMother.success(
-                sortOption = SortOption.PRICE_ASC
-            )
+            uiState =
+                ProductListUiStateMother.success(
+                    sortOption = SortOption.PRICE_ASC,
+                ),
         )
 
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListSortOption(SortOption.PRICE_ASC)
-        ).assertIsSelected()
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListSortOption(SortOption.PRICE_DESC)
-        ).assertIsNotSelected()
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListSortOption(SortOption.DISCOUNT)
-        ).assertIsNotSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListSortOption(SortOption.PRICE_ASC),
+            ).assertIsSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListSortOption(SortOption.PRICE_DESC),
+            ).assertIsNotSelected()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListSortOption(SortOption.DISCOUNT),
+            ).assertIsNotSelected()
     }
 
     @Test
     fun givenRendered_whenSelectSortOption_thenMarkChipWithSortOptionSelected() {
         val sortOptionToSelect = SortOption.DISCOUNT
-        var sortOptionSelected:SortOption = SortOption.NONE
+        var sortOptionSelected: SortOption = SortOption.NONE
 
         createProductListScreen(
             uiState = ProductListUiStateMother.success(sortOption = SortOption.NONE),
@@ -171,12 +179,13 @@ class ProductListScreenTest {
                 if (it is ProductListAction.SortedBy) {
                     sortOptionSelected = it.value
                 }
-            }
+            },
         )
 
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListSortOption(sortOptionToSelect)
-        ).performClick()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListSortOption(sortOptionToSelect),
+            ).performClick()
 
         assertEquals(sortOptionToSelect, sortOptionSelected)
     }
@@ -184,7 +193,7 @@ class ProductListScreenTest {
     @Test
     fun givenRendered_whenSelectCategory_thenMarkChipWithCategorySelected() {
         val categoryToSelect = ProductMother.eggs().category
-        var categorySelected:String? = null
+        var categorySelected: String? = null
 
         createProductListScreen(
             uiState = ProductListUiStateMother.success(selectedCategory = null),
@@ -192,12 +201,13 @@ class ProductListScreenTest {
                 if (it is ProductListAction.FilterBy) {
                     categorySelected = it.value
                 }
-            }
+            },
         )
 
-        composeRule.onNodeWithTag(
-            ProductListTestTags.productListCategory(categoryToSelect)
-        ).performClick()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListCategory(categoryToSelect),
+            ).performClick()
 
         assertEquals(categoryToSelect, categorySelected)
     }
@@ -206,7 +216,7 @@ class ProductListScreenTest {
     fun givenNotShowFilterSelected_whenRendered_thenNotShowCardFilters() {
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
-            showFilters = false
+            showFilters = false,
         )
         composeRule.onNodeWithTag(ProductListTestTags.FILTERS_MENU).assertDoesNotExist()
     }
@@ -215,7 +225,7 @@ class ProductListScreenTest {
     fun givenShowFilterSelected_whenRendered_thenShowCardFilters() {
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
-            showFilters = true
+            showFilters = true,
         )
         composeRule.onNodeWithTag(ProductListTestTags.FILTERS_MENU).assertIsDisplayed()
     }
@@ -227,7 +237,7 @@ class ProductListScreenTest {
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
             showFilters = false,
-            onFilterClick = {showFilters = it }
+            onFilterClick = { showFilters = it },
         )
 
         composeRule.onNodeWithTag(CoreTestTag.SHOW_FILTERS).performClick()
@@ -242,7 +252,7 @@ class ProductListScreenTest {
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
             showFilters = true,
-            onFilterClick = {showFilters = it }
+            onFilterClick = { showFilters = it },
         )
 
         composeRule.onNodeWithTag(CoreTestTag.SHOW_FILTERS).performClick()
@@ -256,7 +266,7 @@ class ProductListScreenTest {
 
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
-            onSettingsSelected = { settingsClicked = true }
+            onSettingsSelected = { settingsClicked = true },
         )
 
         composeRule.onNodeWithTag(CoreTestTag.SETTINGS).performClick()
@@ -270,7 +280,7 @@ class ProductListScreenTest {
 
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
-            onCartSelected = { cartClicked = true }
+            onCartSelected = { cartClicked = true },
         )
 
         composeRule.onNodeWithTag(CoreTestTag.CART).performClick()
@@ -283,7 +293,7 @@ class ProductListScreenTest {
         val cartItemCount = 5
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
-            cartItemCount = cartItemCount
+            cartItemCount = cartItemCount,
         )
         composeRule.onNodeWithText("5").assertIsDisplayed()
     }
@@ -293,7 +303,7 @@ class ProductListScreenTest {
         val cartItemCount = 0
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
-            cartItemCount = cartItemCount
+            cartItemCount = cartItemCount,
         )
         composeRule.onNodeWithTag(CoreTestTag.CART_BADGE).assertDoesNotExist()
     }
@@ -303,7 +313,7 @@ class ProductListScreenTest {
         val cartItemCount = 152
         createProductListScreen(
             uiState = ProductListUiStateMother.success(),
-            cartItemCount = cartItemCount
+            cartItemCount = cartItemCount,
         )
         composeRule.onNodeWithText(CoreStr.CART_SIZE_OVER_99).assertIsDisplayed()
     }
@@ -318,18 +328,16 @@ class ProductListScreenTest {
                 if (it is ProductListAction.ClickProdcut) {
                     productClicked = it.value
                 }
-            }
+            },
         )
 
-        composeRule.onNodeWithTag(ProductListTestTags.productListProductsWithPromotion(
-            ProductMother.bread().id
-        )).performClick()
+        composeRule
+            .onNodeWithTag(
+                ProductListTestTags.productListProductsWithPromotion(
+                    ProductMother.bread().id,
+                ),
+            ).performClick()
 
         assertEquals(ProductMother.bread(), productClicked!!.product)
-
     }
-
-
-    
-
 }

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "promotions")
-data class PromotionEntity (
+data class PromotionEntity(
     @PrimaryKey
     val id: String,
     val productIds: String,
@@ -13,5 +13,5 @@ data class PromotionEntity (
     val buyX: Int? = null,
     val payY: Int? = null,
     val startAtEpoch: Long,
-    val endAtEpoch: Long
+    val endAtEpoch: Long,
 )

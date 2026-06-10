@@ -23,23 +23,23 @@ import java.text.NumberFormat
 fun CartSummaryCard(
     modifier: Modifier = Modifier,
     summary: CartSummary,
-    currencyFormatter: NumberFormat
+    currencyFormatter: NumberFormat,
 ) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
     ) {
         Column(
             Modifier.fillMaxWidth().padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(22.dp)
+            verticalArrangement = Arrangement.spacedBy(22.dp),
         ) {
             Text(
                 text = CartStr.SUMMARY_TITLE,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Row(
@@ -50,7 +50,7 @@ fun CartSummaryCard(
                     text = CartStr.SUMMARY_SUBTOTAL,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = currencyFormatter.format(summary.subtotal),
@@ -78,7 +78,7 @@ fun CartSummaryCard(
 
             HorizontalDivider(
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(.2f),
-                thickness = 1.dp
+                thickness = 1.dp,
             )
 
             Row(
@@ -98,7 +98,6 @@ fun CartSummaryCard(
                     fontWeight = FontWeight.Bold,
                 )
             }
-
         }
     }
 }

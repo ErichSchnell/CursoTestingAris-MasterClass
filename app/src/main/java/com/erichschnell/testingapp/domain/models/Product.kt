@@ -8,5 +8,4 @@ data class Product(
     val category: String,
     val stock: Int,
     val imageUrl: String? = null,
-
 )
