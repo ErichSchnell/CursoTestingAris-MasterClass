@@ -15,7 +15,6 @@ fun AddToCartButton(
         if (it.stock > 0) {
             AddToCartButtonWithStock(
                 modifier = modifier,
-                product = it,
                 isLoading = isLoading,
                 addToCart = addToCart
             )

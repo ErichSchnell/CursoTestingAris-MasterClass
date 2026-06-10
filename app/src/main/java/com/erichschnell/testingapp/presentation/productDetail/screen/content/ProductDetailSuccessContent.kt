@@ -1,5 +1,6 @@
 package com.erichschnell.testingapp.presentation.productDetail.screen.content
 
+import android.R.attr.text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,12 +29,12 @@ import com.erichschnell.testingapp.R
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiAction
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiState
 import com.erichschnell.testingapp.domain.models.ProductPromotion
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailsStr
 
 @Composable
 fun ProductDetailSuccessContent(
     modifier: Modifier = Modifier,
-    state: ProductDetailUiState,
-    onAction: (ProductDetailUiAction) -> Unit
+    state: ProductDetailUiState
 ) {
     Column(
         modifier
@@ -120,8 +121,9 @@ fun ProductDetailSuccessContent(
                                 shape = RoundedCornerShape(8.dp),
                                 color = MaterialTheme.colorScheme.errorContainer
                             ) {
+                                val percent = (promotion as ProductPromotion.Percent).percent.toInt()
                                 Text(
-                                    text = "${(promotion as ProductPromotion.Percent).percent.toInt()}% OFF",
+                                    text = ProductDetailsStr.discoutPercent(percent),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onErrorContainer
@@ -167,7 +169,7 @@ fun ProductDetailSuccessContent(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "Stock disponible",
+                                text = ProductDetailsStr.STOCK_AVAILABLE,
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -176,7 +178,8 @@ fun ProductDetailSuccessContent(
                                 color = colorStock
                             ) {
                                 Text(
-                                    text = if (hasStock) "${product.stock} unidades" else "Sin Stock",
+                                    text = if (hasStock) ProductDetailsStr.stockAvailable(product.stock)
+                                    else ProductDetailsStr.WITHOUT_STOCK,
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
                                     style = MaterialTheme.typography.bodyLarge,
                                     fontWeight = FontWeight.Bold,

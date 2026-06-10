@@ -16,14 +16,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.erichschnell.testingapp.domain.models.Product
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailTestTags
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailsStr
 
 @Composable
 fun AddToCartButtonWithStock(
     modifier: Modifier = Modifier,
-    product: Product,
     isLoading: Boolean,
     addToCart: () -> Unit = {}
 ) {
@@ -36,7 +37,7 @@ fun AddToCartButtonWithStock(
             Modifier.padding(16.dp)
         )  {
             Button(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(ProductDetailTestTags.ADD_TO_CART_BUTTON),
                 enabled = !isLoading,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
@@ -44,12 +45,12 @@ fun AddToCartButtonWithStock(
             ) {
                 Icon(
                     Icons.Default.ShoppingCart,
-                    contentDescription = "Agregar al carrito",
+                    contentDescription = ProductDetailsStr.ADD_PRODUCT,
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "Agregar al carrito",
+                    text = ProductDetailsStr.ADD_PRODUCT,
                     fontWeight = FontWeight.Bold
                 )
             }

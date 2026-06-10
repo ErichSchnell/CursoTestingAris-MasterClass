@@ -16,8 +16,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailTestTags
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailsStr
 
 @Composable
 fun AddToCartButtonNoStock(modifier: Modifier = Modifier) {
@@ -30,7 +33,7 @@ fun AddToCartButtonNoStock(modifier: Modifier = Modifier) {
             Modifier.padding(16.dp)
         )  {
             Button(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().testTag(ProductDetailTestTags.WITHOUT_STOCK),
                 enabled = false,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(disabledContainerColor = MaterialTheme.colorScheme.errorContainer),
@@ -38,12 +41,12 @@ fun AddToCartButtonNoStock(modifier: Modifier = Modifier) {
             ) {
                 Icon(
                     Icons.Default.Warning,
-                    contentDescription = "Agregar al carrito",
+                    contentDescription = ProductDetailsStr.WITHOUT_STOCK,
                     tint = MaterialTheme.colorScheme.onErrorContainer
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "Sin stock disponible",
+                    text = ProductDetailsStr.WITHOUT_STOCK_AVAILABLE,
                     color = MaterialTheme.colorScheme.onErrorContainer,
                     fontWeight = FontWeight.Bold
                 )

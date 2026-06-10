@@ -13,12 +13,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.erichschnell.testingapp.domain.models.Product
+import com.erichschnell.testingapp.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.presentation.core.components.MarketTopAppBar
 import com.erichschnell.testingapp.presentation.productDetail.components.AddToCartButton
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailEvent
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailTestTags
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiAction
+import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiState
 import com.erichschnell.testingapp.presentation.productDetail.screen.content.ProductDetailSuccessContent
 
 @Composable
@@ -48,6 +55,22 @@ fun ProductDetailScreen(
         }
     }
 
+    ProductDetailScreenContent(
+        uiState = uiState,
+        snackbarHostState = snackbarHostState,
+        onBack = onBack,
+        onAction = viewModel::onAction
+    )
+
+}
+
+@Composable
+fun ProductDetailScreenContent(
+    uiState: ProductDetailUiState,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onBack: () -> Unit,
+    onAction: (ProductDetailUiAction) -> Unit
+) {
     Scaffold(
         topBar = {
             MarketTopAppBar(
@@ -59,7 +82,7 @@ fun ProductDetailScreen(
             AddToCartButton(
                 product = uiState.item?.product,
                 isLoading = uiState.isLoading,
-                addToCart = { viewModel.onAction(ProductDetailUiAction.AddToCart) }
+                addToCart = { onAction(ProductDetailUiAction.AddToCart) }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -72,20 +95,52 @@ fun ProductDetailScreen(
                     .fillMaxSize()
                     .padding(paddings)
                     .padding(16.dp),
-                state = uiState,
-                onAction = viewModel::onAction,
+                state = uiState
             )
         }
     }
 }
 
 
+
 @Composable
 private fun LoadingContent() {
     Box(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxSize().testTag(ProductDetailTestTags.LOADING),
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator()
     }
+}
+
+@Preview
+@Composable
+private fun PreviewProductDetailScreenSuccess() {
+    val item =  ProductWithPromotion(
+        product = Product(
+            id = "id-bread",
+            name = "Pan",
+            description = "Pan de casa",
+            price = 10.2,
+            category = "Panaderia",
+            stock = 8,
+            imageUrl = null
+        ),
+        promotion = null
+    )
+    ProductDetailScreenContent(
+        uiState = ProductDetailUiState(item = item, isLoading = false),
+        onBack = {  },
+        onAction = {  }
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewProductDetailScreenLoading() {
+    ProductDetailScreenContent(
+        uiState = ProductDetailUiState(),
+        onBack = {  },
+        onAction = {  }
+    )
 }
