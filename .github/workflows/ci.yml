@@ -15,11 +15,13 @@ concurrency:
 
 permissions:
   contents: read
+  checks: write
+  pull-requests: write
 
 
 jobs:
   unit-tests:
-    name: 🧪 Unit Tests
+    name: 🧪 Unit Tests + coverage
     runs-on: ubuntu-latest
 
 
@@ -39,10 +41,26 @@ jobs:
 
 
       - name: Run unit tests
-        run: ./gradlew :app:testDebugUnitTest
+        run: ./gradlew :app:testDebugUnitTest :app:koverXmlReportDebug :app:koverHtmlReportDebug :app:koverVerifyDebug
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      - name: Cobertura -> resumen del run
+        if: always()
+        run: |
+          XML=app/build/reports/kover/reportDEbug.xml
+          if [ -f "$XML" ]; then
+            echo "## 🧪 Corbertura de líneas (unit)" >> "$GITHUB_STEP_SUMMARY"
+            awk -F'"' '/type="LINE"/{=$4;c=$6} END{t=m+c; if(t>0) printf "- **%d%%** (%d/%d líneas) - gate mínimo: 20%%\n", c*100/t, c, t}' "$XML" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          check_name: Unit test results
+          files: app/build/test-results/testDebugUnitTest/**/*.xml
 
   build:
     name: 🏗️ Assemble debug APK

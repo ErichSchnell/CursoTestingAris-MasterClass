@@ -1,6 +1,5 @@
 package com.erichschnell.testingapp.presentation.productList.components
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList

@@ -1,6 +1,5 @@
 package com.erichschnell.testingapp.presentation.productList.components
 
-
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

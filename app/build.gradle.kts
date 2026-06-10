@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -49,6 +50,26 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    kover {
+        reports {
+            filters {
+                excludes {
+                    classes(
+                        "*.databinding.*",
+                        "*.BuilConfig",
+                        "*Activity*",
+                        "*Screen*",
+                        "*ComposableSingletons*",
+                    )
+                }
+            }
+            verify {
+                rule {
+                    minBound(20)
+                }
+            }
+        }
     }
 }
 
