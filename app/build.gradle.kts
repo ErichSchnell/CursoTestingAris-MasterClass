@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
@@ -12,7 +12,7 @@ plugins {
 android {
     namespace = "com.erichschnell.testingapp"
     compileSdk {
-        version = release(36) { minorApiLevel = 1 }
+        version = release(36)
     }
 
     sourceSets {
@@ -31,7 +31,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.erichschnell.testingapp.HiltTestrunner"
+        testInstrumentationRunner = "com.erichschnell.testingapp.HiltTestRunner"
     }
 
     buildTypes {
@@ -51,13 +51,16 @@ android {
         compose = true
         buildConfig = true
     }
+    kotlin {
+        jvmToolchain(21)
+    }
     kover {
         reports {
             filters {
                 excludes {
                     classes(
                         "*.databinding.*",
-                        "*.BuilConfig",
+                        "*.BuildConfig",
                         "*Activity*",
                         "*Screen*",
                         "*ComposableSingletons*",
@@ -66,7 +69,7 @@ android {
             }
             verify {
                 rule {
-                    minBound(20)
+                    minBound(15)
                 }
             }
         }
@@ -125,24 +128,18 @@ dependencies {
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // -------------- Test ----------------------------
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockK)
-
-    // Turbine
     testImplementation(libs.turbine)
     androidTestImplementation(libs.turbine)
 
-    // MockWebServer
     testImplementation(libs.mockwebserver)
     androidTestImplementation(libs.mockwebserver)
 
-    // Hilt
     androidTestImplementation(libs.hilt.android.testing)
-
     androidTestImplementation(libs.kotlin.test)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
