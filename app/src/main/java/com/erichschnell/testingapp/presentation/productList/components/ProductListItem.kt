@@ -69,7 +69,7 @@ fun ProductListItems(
 ) {
     LazyColumn(
         modifier = Modifier.testTag(ProductListTestTags.PRODUCTS_LIST),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(products) { product ->
             ProductItem(product) {

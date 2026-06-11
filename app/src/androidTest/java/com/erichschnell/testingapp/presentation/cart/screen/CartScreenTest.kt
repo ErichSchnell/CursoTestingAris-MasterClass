@@ -51,24 +51,32 @@ class CartScreenTest {
         composeRule.onNodeWithText(CartStr.SUMMARY_DISCOUNT).assertIsDisplayed()
         composeRule.onNodeWithText(CartStr.SUMMARY_TOTAL).assertIsDisplayed()
 
-        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+        composeRule
+            .onNodeWithTag(CartTestTags.PRODUCTS_LIST)
             .performScrollToNode(hasText(ProductMother.bread().name))
-        composeRule.onNodeWithText(ProductMother.bread().name)
+        composeRule
+            .onNodeWithText(ProductMother.bread().name)
             .assertIsDisplayed()
 
-        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+        composeRule
+            .onNodeWithTag(CartTestTags.PRODUCTS_LIST)
             .performScrollToNode(hasText(ProductMother.eggs().name))
-        composeRule.onNodeWithText(ProductMother.eggs().name)
+        composeRule
+            .onNodeWithText(ProductMother.eggs().name)
             .assertIsDisplayed()
 
-        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+        composeRule
+            .onNodeWithTag(CartTestTags.PRODUCTS_LIST)
             .performScrollToNode(hasText(ProductMother.milk().name))
-        composeRule.onNodeWithText(ProductMother.milk().name)
+        composeRule
+            .onNodeWithText(ProductMother.milk().name)
             .assertIsDisplayed()
 
-        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+        composeRule
+            .onNodeWithTag(CartTestTags.PRODUCTS_LIST)
             .performScrollToNode(hasText(ProductMother.soda().name))
-        composeRule.onNodeWithText(ProductMother.soda().name)
+        composeRule
+            .onNodeWithText(ProductMother.soda().name)
             .assertIsDisplayed()
     }
 

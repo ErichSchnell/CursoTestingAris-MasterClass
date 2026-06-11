@@ -134,7 +134,10 @@ class SettingScreenTest {
             }
         })
 
-        composeRule.onNodeWithTag(SettingsTestTags.SHOW_IN_STOCK_ONLY).performClick()
+        composeRule
+            .onNodeWithTag(SettingsTestTags.SHOW_IN_STOCK_ONLY)
+            .assertIsDisplayed()
+            .performClick()
 
         composeRule.runOnIdle {
             assertTrue(swtichClicked)
@@ -151,7 +154,10 @@ class SettingScreenTest {
             }
         })
 
-        composeRule.onNodeWithTag(SettingsTestTags.SHOW_WITH_TAXES).performClick()
+        composeRule
+            .onNodeWithTag(SettingsTestTags.SHOW_WITH_TAXES)
+            .assertIsDisplayed()
+            .performClick()
 
         composeRule.runOnIdle {
             assertTrue(swtichClicked)
