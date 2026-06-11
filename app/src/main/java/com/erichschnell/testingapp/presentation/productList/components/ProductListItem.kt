@@ -67,7 +67,10 @@ fun ProductListItems(
     products: List<ProductWithPromotion>,
     onClick: (ProductWithPromotion) -> Unit,
 ) {
-    LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    LazyColumn(
+        modifier = Modifier.testTag(ProductListTestTags.PRODUCTS_LIST),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         items(products) { product ->
             ProductItem(product) {
                 onClick(product)

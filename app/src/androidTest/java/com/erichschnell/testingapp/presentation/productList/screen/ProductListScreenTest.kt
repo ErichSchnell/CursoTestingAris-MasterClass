@@ -4,14 +4,19 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
+import com.erichschnell.testingapp.core.builders.product
 import com.erichschnell.testingapp.core.mothers.ProductMother
 import com.erichschnell.testingapp.core.mothers.uistate.ProductListUiStateMother
 import com.erichschnell.testingapp.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.domain.models.SortOption
+import com.erichschnell.testingapp.presentation.cart.model.CartTestTags
 import com.erichschnell.testingapp.presentation.core.CoreStr
 import com.erichschnell.testingapp.presentation.core.CoreTestTag
 import com.erichschnell.testingapp.presentation.productList.models.ProductListAction
@@ -76,10 +81,37 @@ class ProductListScreenTest {
         composeRule.onNodeWithText(ProductListStr.ORDER_BY_PRICE_DESC).assertIsDisplayed()
         composeRule.onNodeWithText(ProductListStr.ORDER_BY_DISCOUNT).assertIsDisplayed()
 
-        composeRule.onNodeWithTag(ProductMother.bread().id).assertIsDisplayed()
-        composeRule.onNodeWithTag(ProductMother.eggs().id).assertIsDisplayed()
-        composeRule.onNodeWithTag(ProductMother.soda().id).assertIsDisplayed()
-        composeRule.onNodeWithTag(ProductMother.milk().id).assertIsDisplayed()
+        composeRule.onNodeWithTag(ProductListTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasTestTag(
+                ProductListTestTags.productListProductsWithPromotion(ProductMother.bread().id)
+            ))
+        composeRule.onNodeWithTag(
+        ProductListTestTags.productListProductsWithPromotion(ProductMother.bread().id)
+        ).assertIsDisplayed()
+
+        composeRule.onNodeWithTag(ProductListTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasTestTag(
+                ProductListTestTags.productListProductsWithPromotion(ProductMother.eggs().id)
+            ))
+        composeRule.onNodeWithTag(
+            ProductListTestTags.productListProductsWithPromotion(ProductMother.eggs().id)
+        ).assertIsDisplayed()
+
+        composeRule.onNodeWithTag(ProductListTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasTestTag(
+                ProductListTestTags.productListProductsWithPromotion(ProductMother.soda().id)
+            ))
+        composeRule.onNodeWithTag(
+            ProductListTestTags.productListProductsWithPromotion(ProductMother.soda().id)
+        ).assertIsDisplayed()
+
+        composeRule.onNodeWithTag(ProductListTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasTestTag(
+                ProductListTestTags.productListProductsWithPromotion(ProductMother.milk().id)
+            ))
+        composeRule.onNodeWithTag(
+            ProductListTestTags.productListProductsWithPromotion(ProductMother.milk().id)
+        ).assertIsDisplayed()
     }
 
     @Test

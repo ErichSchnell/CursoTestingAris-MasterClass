@@ -119,7 +119,9 @@ class SettingScreenTest {
 
         composeRule.onNodeWithTag(CoreTestTag.TOP_APP_BAR_BACK_BUTTON).performClick()
 
-        assertTrue(backClicked)
+        composeRule.runOnIdle {
+            assertTrue(backClicked)
+        }
     }
 
     @Test
@@ -134,7 +136,9 @@ class SettingScreenTest {
 
         composeRule.onNodeWithTag(SettingsTestTags.SHOW_IN_STOCK_ONLY).performClick()
 
-        assertTrue(swtichClicked)
+        composeRule.runOnIdle {
+            assertTrue(swtichClicked)
+        }
     }
 
     @Test
@@ -149,7 +153,9 @@ class SettingScreenTest {
 
         composeRule.onNodeWithTag(SettingsTestTags.SHOW_WITH_TAXES).performClick()
 
-        assertTrue(swtichClicked)
+        composeRule.runOnIdle {
+            assertTrue(swtichClicked)
+        }
     }
 
     @Test

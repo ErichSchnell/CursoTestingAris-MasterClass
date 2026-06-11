@@ -2,10 +2,12 @@ package com.erichschnell.testingapp.presentation.cart.screen
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeRight
 import com.erichschnell.testingapp.core.mothers.CartItemMother
@@ -49,25 +51,25 @@ class CartScreenTest {
         composeRule.onNodeWithText(CartStr.SUMMARY_DISCOUNT).assertIsDisplayed()
         composeRule.onNodeWithText(CartStr.SUMMARY_TOTAL).assertIsDisplayed()
 
-        composeRule
-            .onNodeWithText(
-                ProductMother.bread().name,
-            ).assertIsDisplayed()
+        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasText(ProductMother.bread().name))
+        composeRule.onNodeWithText(ProductMother.bread().name)
+            .assertIsDisplayed()
 
-        composeRule
-            .onNodeWithText(
-                ProductMother.eggs().name,
-            ).assertIsDisplayed()
+        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasText(ProductMother.eggs().name))
+        composeRule.onNodeWithText(ProductMother.eggs().name)
+            .assertIsDisplayed()
 
-        composeRule
-            .onNodeWithText(
-                ProductMother.milk().name,
-            ).assertIsDisplayed()
+        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasText(ProductMother.milk().name))
+        composeRule.onNodeWithText(ProductMother.milk().name)
+            .assertIsDisplayed()
 
-        composeRule
-            .onNodeWithText(
-                ProductMother.soda().name,
-            ).assertIsDisplayed()
+        composeRule.onNodeWithTag(CartTestTags.PRODUCTS_LIST)
+            .performScrollToNode(hasText(ProductMother.soda().name))
+        composeRule.onNodeWithText(ProductMother.soda().name)
+            .assertIsDisplayed()
     }
 
     @Test
