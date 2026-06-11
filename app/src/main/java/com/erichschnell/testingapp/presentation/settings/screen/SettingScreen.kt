@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -164,8 +165,12 @@ fun SettingThemeApp(
         }
     }
 }
-
-@Preview
+// Pantalla pequeña (ideal para simular el emulador problemático del CI)
+@Preview(name = "Small Screen", device = Devices.NEXUS_5)
+// Pantalla normal
+@Preview(name = "Phone", device = Devices.PIXEL_4)
+// Pantalla grande/Tablet
+@Preview(name = "Tablet", device = Devices.TABLET)
 @Composable
 private fun PreviewSuccessContent() {
     SuccessContent(
