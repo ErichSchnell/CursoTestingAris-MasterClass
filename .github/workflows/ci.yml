@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -24,11 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -42,7 +42,7 @@ jobs:
           XML=app/build/reports/kover/reportDebug.xml
           if [ -f "$XML" ]; then
             echo "## 🧪 Cobertura de líneas (unit)" >> "$GITHUB_STEP_SUMMARY"
-            awk -F'"' '/type="LINE"/{m=$4;c=$6} END{t=m+c; if(t>0) printf "- **%d%%** (%d/%d líneas) — gate mínimo: 20%%\n", c*100/t, c, t}' "$XML" >> "$GITHUB_STEP_SUMMARY"
+            awk -F'"' '/type="LINE"/{m=$4;c=$6} END{t=m+c; if(t>0) printf "- **%d%%** (%d/%d líneas) — gate mínimo: 15%%\n", c*100/t, c, t}' "$XML" >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Publish test results
@@ -62,11 +62,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -89,11 +89,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -116,11 +116,11 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
       - uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Cache AVD
