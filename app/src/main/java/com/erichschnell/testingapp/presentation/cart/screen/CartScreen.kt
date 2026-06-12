@@ -44,13 +44,12 @@ fun CartScreen(
     viewModel: CartViewModel = hiltViewModel(),
     onBack: () -> Unit,
 ) {
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
-            when(event){
+            when (event) {
                 is CartEvent.ShowMessage -> snackbarHostState.showSnackbar(event.message)
             }
         }
@@ -60,28 +59,26 @@ fun CartScreen(
         uiState,
         snackbarHostState = snackbarHostState,
         onBack = onBack,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
     )
 }
 
 @Composable
 fun CartScreenContent(
     uiState: CartUiState,
-    snackbarHostState:SnackbarHostState  = remember { SnackbarHostState() },
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onBack: () -> Unit,
-    onAction: (CartAction) -> Unit
+    onAction: (CartAction) -> Unit,
 ) {
     Scaffold(
         topBar = { MarketTopAppBar(title = CartStr.TITLE, onBackSelected = onBack) },
-        snackbarHost = { SnackbarHost(snackbarHostState)}
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddings ->
-        when(uiState){
+        when (uiState) {
             is CartUiState.Error -> ErrorContent(paddings, uiState.message, onBack)
             CartUiState.Loading -> LoadingContent(paddings)
             is CartUiState.Success -> CartSuccesssContent(paddings, uiState, onAction)
         }
-
-
     }
 }
 
@@ -89,7 +86,7 @@ fun CartScreenContent(
 private fun ErrorContent(
     paddings: PaddingValues,
     message: String,
-    onRetry: () -> Unit = {}
+    onRetry: () -> Unit = {},
 ) {
     Column(
         Modifier
@@ -98,20 +95,20 @@ private fun ErrorContent(
             .padding(16.dp)
             .testTag(CartTestTags.STATE_ERROR),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = "Error: $message",
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.error
+            color = MaterialTheme.colorScheme.error,
         )
         Spacer(Modifier.height(16.dp))
         Button(
             modifier = Modifier.testTag(CartTestTags.ERROR_RETRY),
-            onClick = { onRetry() }
+            onClick = { onRetry() },
         ) {
             Text(
-                text = CartStr.REINTENTAR
+                text = CartStr.REINTENTAR,
             )
         }
     }
@@ -125,7 +122,7 @@ private fun LoadingContent(paddings: PaddingValues) {
             .padding(paddings)
             .padding(16.dp)
             .testTag(CartTestTags.STATE_LOADING),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
     }
@@ -135,26 +132,30 @@ private fun LoadingContent(paddings: PaddingValues) {
 @Composable
 private fun PreviewCartScreenSuccessWithItem() {
     CartScreenContent(
-        uiState = CartUiState.Success(
-            cartItems = listOf(
-                CartItemWithPromotion(
-                    cartItem = CartItem("id-bread",5),
-                    item = ProductWithPromotion(
-                        product = Product(
-                            id = "id-bread",
-                            name = "Pan",
-                            description = "Pan de la casa",
-                            price = 10.0,
-                            category = "Panadería",
-                            stock = 10
-                        )
-                    )
-                )
+        uiState =
+            CartUiState.Success(
+                cartItems =
+                    listOf(
+                        CartItemWithPromotion(
+                            cartItem = CartItem("id-bread", 5),
+                            item =
+                                ProductWithPromotion(
+                                    product =
+                                        Product(
+                                            id = "id-bread",
+                                            name = "Pan",
+                                            description = "Pan de la casa",
+                                            price = 10.0,
+                                            category = "Panadería",
+                                            stock = 10,
+                                        ),
+                                ),
+                        ),
+                    ),
+                summary = CartSummary(5.0, 4.0, 8.0),
             ),
-            summary = CartSummary(5.0,4.0,8.0)
-        ),
         onBack = {},
-        onAction = {}
+        onAction = {},
     )
 }
 
@@ -162,12 +163,13 @@ private fun PreviewCartScreenSuccessWithItem() {
 @Composable
 private fun PreviewCartScreenSuccessWithoutItem() {
     CartScreenContent(
-        uiState = CartUiState.Success(
-            cartItems = emptyList(),
-            summary = CartSummary(5.0,4.0,8.0)
-        ),
+        uiState =
+            CartUiState.Success(
+                cartItems = emptyList(),
+                summary = CartSummary(5.0, 4.0, 8.0),
+            ),
         onBack = {},
-        onAction = {}
+        onAction = {},
     )
 }
 
@@ -177,7 +179,7 @@ private fun PreviewCartScreenLoading() {
     CartScreenContent(
         uiState = CartUiState.Loading,
         onBack = {},
-        onAction = {}
+        onAction = {},
     )
 }
 
@@ -187,6 +189,6 @@ private fun PreviewCartScreenError() {
     CartScreenContent(
         uiState = CartUiState.Error(message = "Error"),
         onBack = {},
-        onAction = {}
+        onAction = {},
     )
 }

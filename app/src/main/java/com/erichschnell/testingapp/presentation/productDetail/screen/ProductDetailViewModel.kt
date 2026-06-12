@@ -2,8 +2,8 @@ package com.erichschnell.testingapp.presentation.productDetail.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.erichschnell.testingapp.domain.usecases.AddToCartUseCase
 import com.erichschnell.testingapp.domain.core.model.AppError
+import com.erichschnell.testingapp.domain.usecases.AddToCartUseCase
 import com.erichschnell.testingapp.domain.usecases.GetProductDetailWithPromotionUseCase
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailEvent
 import com.erichschnell.testingapp.presentation.productDetail.models.ProductDetailUiAction
@@ -21,67 +21,72 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductDetailViewModel  @Inject constructor(
-    private val getProductDetailWithPromotionUseCase: GetProductDetailWithPromotionUseCase,
-    private val addToCartUseCase: AddToCartUseCase
-): ViewModel() {
+class ProductDetailViewModel
+    @Inject
+    constructor(
+        private val getProductDetailWithPromotionUseCase: GetProductDetailWithPromotionUseCase,
+        private val addToCartUseCase: AddToCartUseCase,
+    ) : ViewModel() {
+        private val _uiState = MutableStateFlow(ProductDetailUiState())
+        val uiState = _uiState.asStateFlow()
 
-    private val _uiState = MutableStateFlow(ProductDetailUiState())
-    val uiState = _uiState.asStateFlow()
+        private val _events = MutableSharedFlow<ProductDetailEvent>(extraBufferCapacity = 1)
+        val events = _events.asSharedFlow()
 
-    private val _events = MutableSharedFlow<ProductDetailEvent>(extraBufferCapacity = 1)
-    val events = _events.asSharedFlow()
+        private var productJob: Job? = null
 
-    private var productJob: Job? = null
-    fun loadProduct(productId: String) {
-        _uiState.value = _uiState.value.copy(isLoading = true)
-        productJob?.cancel()
-        productJob = getProductDetailWithPromotionUseCase(productId)
-            .onEach {
-                _uiState.value = _uiState.value.copy(isLoading = false, item = it)
+        fun loadProduct(productId: String) {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            productJob?.cancel()
+            productJob =
+                getProductDetailWithPromotionUseCase(productId)
+                    .onEach {
+                        _uiState.value = _uiState.value.copy(isLoading = false, item = it)
+                    }.catch { e ->
+                        _uiState.value = _uiState.value.copy(isLoading = false)
+                        if (e is AppError) {
+                            handleError(e)
+                        } else {
+                            handleError(AppError.UnknownError(null))
+                        }
+                    }.launchIn(viewModelScope)
+        }
+
+        fun onAction(action: ProductDetailUiAction) {
+            when (action) {
+                ProductDetailUiAction.AddToCart -> addToCart()
             }
-            .catch { e ->
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                if (e is AppError){
+        }
+
+        private fun addToCart() {
+            val productId =
+                _uiState.value.item
+                    ?.product
+                    ?.id ?: return
+            viewModelScope.launch {
+                try {
+                    addToCartUseCase(productId)
+                    _events.emit(ProductDetailEvent.Toast.AddProductSuccess)
+                } catch (e: AppError) {
                     handleError(e)
-                } else {
-                    handleError(AppError.UnknownError(null))
+                } catch (e: Exception) {
                 }
             }
-            .launchIn(viewModelScope)
-    }
+        }
 
-    fun onAction(action: ProductDetailUiAction){
-        when(action){
-            ProductDetailUiAction.AddToCart -> addToCart()
+        private suspend fun handleError(e: AppError) {
+            val event =
+                when (e) {
+                    is AppError.UnknownError,
+                    AppError.DatabaseError,
+                    AppError.Validation.QuantityMustBePositive,
+                    AppError.NotFoundError,
+                    -> ProductDetailEvent.Toast.NotFoundError
+
+                    AppError.NetworkError -> ProductDetailEvent.Toast.NetworkError
+
+                    is AppError.Validation.InsufficientStock -> ProductDetailEvent.Toast.InsufficientStock
+                }
+            _events.emit(event)
         }
     }
-
-    private fun addToCart() {
-        val productId = _uiState.value.item?.product?.id ?: return
-        viewModelScope.launch {
-            try {
-                addToCartUseCase(productId)
-                _events.emit(ProductDetailEvent.Toast.AddProductSuccess)
-            } catch (e: AppError) {
-                handleError(e)
-            } catch (e: Exception) {
-
-            }
-        }
-    }
-
-    private suspend fun handleError(e: AppError) {
-        val event = when(e){
-            is AppError.UnknownError,
-            AppError.DatabaseError,
-            AppError.Validation.QuantityMustBePositive,
-            AppError.NotFoundError -> ProductDetailEvent.Toast.NotFoundError
-
-            AppError.NetworkError -> ProductDetailEvent.Toast.NetworkError
-
-            is AppError.Validation.InsufficientStock -> ProductDetailEvent.Toast.InsufficientStock
-        }
-        _events.emit(event)
-    }
-}

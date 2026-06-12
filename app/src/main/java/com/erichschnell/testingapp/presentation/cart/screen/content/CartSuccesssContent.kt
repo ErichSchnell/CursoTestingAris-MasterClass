@@ -34,14 +34,14 @@ import java.util.Currency
 fun CartSuccesssContent(
     paddings: PaddingValues,
     state: CartUiState.Success,
-    onAction: (CartAction) -> Unit
+    onAction: (CartAction) -> Unit,
 ) {
-
-    val currencyFormatter = remember {
-        NumberFormat.getCurrencyInstance().apply {
-            currency = Currency.getInstance("USD")
+    val currencyFormatter =
+        remember {
+            NumberFormat.getCurrencyInstance().apply {
+                currency = Currency.getInstance("USD")
+            }
         }
-    }
 
     Column(
         Modifier
@@ -52,33 +52,44 @@ fun CartSuccesssContent(
     ) {
         AnimatedContent(
             targetState = state.cartItems.isEmpty(),
-            modifier = Modifier.weight(1f)
-        ){ isEmpty ->
-            if (isEmpty){
+            modifier = Modifier.weight(1f),
+        ) { isEmpty ->
+            if (isEmpty) {
                 CartItemsEmptyContent()
             } else {
                 CartItemsContent(
                     modifier = Modifier,
                     cartItems = state.cartItems,
                     currencyFormatter = currencyFormatter,
-                    onIncreseQuantity = {id, quantity -> onAction(CartAction.IncreaseQuantity(
-                        id, quantity
-                    )) },
-                    onDecreseQuantity = {id, quantity -> onAction(CartAction.DecreaseQuantity(
-                        id, quantity
-                    )) },
-                    onRemove = {id -> onAction(CartAction.RemoveCartItem(id))}
+                    onIncreseQuantity = { id, quantity ->
+                        onAction(
+                            CartAction.IncreaseQuantity(
+                                id,
+                                quantity,
+                            ),
+                        )
+                    },
+                    onDecreseQuantity = { id, quantity ->
+                        onAction(
+                            CartAction.DecreaseQuantity(
+                                id,
+                                quantity,
+                            ),
+                        )
+                    },
+                    onRemove = { id -> onAction(CartAction.RemoveCartItem(id)) },
                 )
             }
         }
         if (state.cartItems.isNotEmpty()) {
             CartSummaryCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .testTag(CartTestTags.SUMMARY_CARD),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .testTag(CartTestTags.SUMMARY_CARD),
                 summary = state.summary,
-                currencyFormatter = currencyFormatter
+                currencyFormatter = currencyFormatter,
             )
         }
     }
@@ -97,7 +108,7 @@ private fun CartItemsEmptyContent(modifier: Modifier = Modifier) {
             text = CartStr.EMPTY_CART_MESSAGE,
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.secondary,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
         Spacer(Modifier.height(16.dp))
         Text(
@@ -115,14 +126,14 @@ private fun CartItemsContent(
     cartItems: List<CartItemWithPromotion>,
     onIncreseQuantity: (String, Int) -> Unit,
     onDecreseQuantity: (String, Int) -> Unit,
-    onRemove: (String) -> Unit
+    onRemove: (String) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.testTag(CartTestTags.PRODUCTS_LIST),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(cartItems, key = {it.item.product.id}){itemWithProduct ->
+        items(cartItems, key = { it.item.product.id }) { itemWithProduct ->
             CartItemCard(
                 modifier = Modifier.animateItem(),
                 currencyFormatter = currencyFormatter,

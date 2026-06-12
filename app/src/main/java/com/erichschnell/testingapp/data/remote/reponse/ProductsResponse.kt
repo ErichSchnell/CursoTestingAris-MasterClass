@@ -8,6 +8,7 @@ data class ProductsResponse(
     @SerialName("products")
     val products: List<ProductResponse>,
 )
+
 @Serializable
 data class ProductResponse(
     @SerialName("id")

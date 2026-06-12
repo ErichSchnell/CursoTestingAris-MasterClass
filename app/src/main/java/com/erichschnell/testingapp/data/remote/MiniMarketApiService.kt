@@ -5,7 +5,6 @@ import com.erichschnell.testingapp.data.remote.reponse.PromotionsResponse
 import retrofit2.http.GET
 
 interface MiniMarketApiService {
-
     @GET("data/products.json")
     suspend fun getProducts(): ProductsResponse
 

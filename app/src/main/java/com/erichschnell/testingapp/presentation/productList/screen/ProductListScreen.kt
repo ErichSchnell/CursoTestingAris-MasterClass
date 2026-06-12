@@ -39,7 +39,7 @@ fun ProductListScreen(
     productListViewModel: ProductListViewModel = hiltViewModel(),
     navigateToSettings: () -> Unit,
     navigateToCart: () -> Unit,
-    navigateToProductDetail: (String) -> Unit
+    navigateToProductDetail: (String) -> Unit,
 ) {
     val uiState by productListViewModel.uiState.collectAsStateWithLifecycle()
     val showFilters by productListViewModel.showFilters.collectAsStateWithLifecycle()
@@ -49,7 +49,7 @@ fun ProductListScreen(
 
     LaunchedEffect(Unit) {
         productListViewModel.events.collect { event ->
-            when(event){
+            when (event) {
                 is ProductListEvent.Message.Text -> snackbarHostState.showSnackbar(event.value)
                 is ProductListEvent.Navigate.ProductDetail -> navigateToProductDetail(event.id)
             }
@@ -64,9 +64,8 @@ fun ProductListScreen(
         onFilterClick = { productListViewModel.onAction(ProductListAction.ShowFilters(it)) },
         onSettingsSelected = { navigateToSettings() },
         onCartSelected = { navigateToCart() },
-        onAction = productListViewModel::onAction
+        onAction = productListViewModel::onAction,
     )
-
 }
 
 @Composable
@@ -78,20 +77,22 @@ fun ProductListScreenContent(
     onFilterClick: (Boolean) -> Unit,
     onSettingsSelected: () -> Unit,
     onCartSelected: () -> Unit,
-    onAction: (ProductListAction) -> Unit
+    onAction: (ProductListAction) -> Unit,
 ) {
     Scaffold(
-        topBar = { HomeTopAppBar(
-            filtersVisible = showFilters,
-            cartItemCount = cartItemCout,
-            onFilterClick = onFilterClick,
-            onSettingsSelected = onSettingsSelected,
-            onCartSelected = onCartSelected
-        ) },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        topBar = {
+            HomeTopAppBar(
+                filtersVisible = showFilters,
+                cartItemCount = cartItemCout,
+                onFilterClick = onFilterClick,
+                onSettingsSelected = onSettingsSelected,
+                onCartSelected = onCartSelected,
+            )
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
 
-        when(uiState) {
+        when (uiState) {
             ProductListUiState.Loading -> {
                 LoadingContent(modifier = Modifier.padding(padding))
             }
@@ -100,12 +101,13 @@ fun ProductListScreenContent(
             }
             is ProductListUiState.Success -> {
                 SuccessContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(padding),
                     state = uiState,
                     showFilters = showFilters,
-                    onAction = onAction
+                    onAction = onAction,
                 )
             }
         }
@@ -114,14 +116,17 @@ fun ProductListScreenContent(
 
 @Composable
 private fun LoadingContent(modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxSize().testTag(ProductListTestTags.STATE_LOADING), contentAlignment = Alignment.Center){
+    Box(modifier.fillMaxSize().testTag(ProductListTestTags.STATE_LOADING), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
-private fun ErrorContent(modifier: Modifier = Modifier, error:String) {
-    Box(modifier.fillMaxSize().testTag(ProductListTestTags.STATE_ERROR), contentAlignment = Alignment.Center){
+private fun ErrorContent(
+    modifier: Modifier = Modifier,
+    error: String,
+) {
+    Box(modifier.fillMaxSize().testTag(ProductListTestTags.STATE_ERROR), contentAlignment = Alignment.Center) {
         Text(error, fontSize = 32.sp, color = Color.Red)
     }
 }
@@ -133,25 +138,24 @@ private fun SuccessContent(
     showFilters: Boolean,
     onAction: (ProductListAction) -> Unit,
 ) {
-    Column (modifier.testTag(ProductListTestTags.STATE_SUCCESS)){
+    Column(modifier.testTag(ProductListTestTags.STATE_SUCCESS)) {
         AnimatedVisibility(visible = showFilters) {
             FiltersMenu(
                 modifier = Modifier.testTag(ProductListTestTags.FILTERS_MENU),
                 state = state,
                 onCategorySelected = { onAction(ProductListAction.FilterBy(it)) },
-                onSortSelected = { onAction(ProductListAction.SortedBy(it)) }
+                onSortSelected = { onAction(ProductListAction.SortedBy(it)) },
             )
         }
 
-
         Text(
             ProductListStr.sizeProducts(state.products.size),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
         )
-        if (state.products.isEmpty()){
+        if (state.products.isEmpty()) {
             ProductListEmpty()
         } else {
-            ProductListItems(state.products){
+            ProductListItems(state.products) {
                 onAction(ProductListAction.ClickProdcut(it))
             }
         }
@@ -161,20 +165,20 @@ private fun SuccessContent(
 @Preview
 @Composable
 private fun PreviewProductListProductListScreen() {
-    val uiState = ProductListUiState.Success(
-        products = emptyList(),
-        categories = listOf("Farmacia","Carne","Frutas","Juegos"),
-        selectedCategory = null,
-        sortOption = SortOption.NONE
-    )
+    val uiState =
+        ProductListUiState.Success(
+            products = emptyList(),
+            categories = listOf("Farmacia", "Carne", "Frutas", "Juegos"),
+            selectedCategory = null,
+            sortOption = SortOption.NONE,
+        )
     ProductListScreenContent(
         uiState = uiState,
         showFilters = true,
         cartItemCout = 5,
         onFilterClick = { },
         onSettingsSelected = { },
-        onCartSelected = {  },
-        onAction = { }
+        onCartSelected = { },
+        onAction = { },
     )
 }
-

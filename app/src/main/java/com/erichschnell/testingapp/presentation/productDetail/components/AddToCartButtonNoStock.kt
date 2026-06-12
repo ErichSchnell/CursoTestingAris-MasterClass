@@ -27,28 +27,28 @@ fun AddToCartButtonNoStock(modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         shadowElevation = 8.dp,
-        tonalElevation = 2.dp
+        tonalElevation = 2.dp,
     ) {
         Box(
-            Modifier.padding(16.dp)
-        )  {
+            Modifier.padding(16.dp),
+        ) {
             Button(
                 modifier = Modifier.fillMaxWidth().testTag(ProductDetailTestTags.WITHOUT_STOCK),
                 enabled = false,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(disabledContainerColor = MaterialTheme.colorScheme.errorContainer),
-                onClick = {}
+                onClick = {},
             ) {
                 Icon(
                     Icons.Default.Warning,
                     contentDescription = ProductDetailsStr.WITHOUT_STOCK,
-                    tint = MaterialTheme.colorScheme.onErrorContainer
+                    tint = MaterialTheme.colorScheme.onErrorContainer,
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = ProductDetailsStr.WITHOUT_STOCK_AVAILABLE,
                     color = MaterialTheme.colorScheme.onErrorContainer,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }

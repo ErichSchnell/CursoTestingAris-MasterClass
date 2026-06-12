@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -37,16 +38,15 @@ import com.erichschnell.testingapp.presentation.settings.models.SettingsTestTags
 @Composable
 fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel(),
-    onBack: () -> Unit = {}
+    onBack: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SuccessContent(
         state = uiState,
         onAction = viewModel::onAction,
-        onBack = onBack
+        onBack = onBack,
     )
-
 }
 
 @Composable
@@ -57,24 +57,25 @@ fun SuccessContent(
     onBack: () -> Unit,
 ) {
     Scaffold(
-        topBar = { MarketTopAppBar(title = SettingsStr.TITLE, onBackSelected = { onBack() }) }
+        topBar = { MarketTopAppBar(title = SettingsStr.TITLE, onBackSelected = { onBack() }) },
     ) { paddings ->
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddings)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(paddings)
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             FiltersAndVisualization(
                 showInStock = state.inStockOnly,
                 onShowInStockChange = { onAction(SettingUiAction.SetInStockOnly(it)) },
                 showTaxes = state.showTaxes,
-                onShowTaxesChange = { onAction(SettingUiAction.SetShowTaxes(it)) }
+                onShowTaxesChange = { onAction(SettingUiAction.SetShowTaxes(it)) },
             )
             SettingThemeApp(
                 themeSelected = state.themeMode,
-                onThemeSelected = { onAction(SettingUiAction.SetThemeMode(it)) }
+                onThemeSelected = { onAction(SettingUiAction.SetThemeMode(it)) },
             )
         }
     }
@@ -86,74 +87,76 @@ private fun FiltersAndVisualization(
     showInStock: Boolean,
     onShowInStockChange: (Boolean) -> Unit,
     showTaxes: Boolean,
-    onShowTaxesChange: (Boolean) -> Unit
+    onShowTaxesChange: (Boolean) -> Unit,
 ) {
     CategorySettingCard(
         modifier = modifier,
         icon = Icons.Default.Info,
-        title = SettingsStr.CATEGORY_FILTERS_AND_VISUALIZATION
+        title = SettingsStr.CATEGORY_FILTERS_AND_VISUALIZATION,
     ) {
         RowSettingSwitch(
             title = SettingsStr.SHOW_IN_STOCK_ONLY,
             description = SettingsStr.SHOW_IN_STOCK_ONLY_DESCRIPTION,
             checked = showInStock,
             tagTest = SettingsTestTags.SHOW_IN_STOCK_ONLY,
-            onCheckedChange = onShowInStockChange
+            onCheckedChange = onShowInStockChange,
         )
         RowSettingSwitch(
             title = SettingsStr.SHOW_WITH_TAXES,
             description = SettingsStr.SHOW_WITH_TAXES_DESCRIPTION,
             checked = showTaxes,
             tagTest = SettingsTestTags.SHOW_WITH_TAXES,
-            onCheckedChange = onShowTaxesChange
+            onCheckedChange = onShowTaxesChange,
         )
     }
 }
 
 @Composable
-fun SettingThemeApp(modifier: Modifier = Modifier, themeSelected: ThemeMode, onThemeSelected: (ThemeMode) -> Unit) {
-
+fun SettingThemeApp(
+    modifier: Modifier = Modifier,
+    themeSelected: ThemeMode,
+    onThemeSelected: (ThemeMode) -> Unit,
+) {
     CategorySettingCard(
         modifier = modifier,
         icon = Icons.Default.DarkMode,
-        title = SettingsStr.CATEGORY_APPEARANCE
+        title = SettingsStr.CATEGORY_APPEARANCE,
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Text(
                 SettingsStr.THEME_MODE,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
             Text(
                 SettingsStr.THEME_MODE_DESCRIPTION,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(4.dp))
 
             SingleChoiceSegmentedButtonRow(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 SegmentedButton(
                     modifier = Modifier.testTag(SettingsTestTags.THEME_SYSTEM),
-                    shape = SegmentedButtonDefaults.itemShape(0,3),
+                    shape = SegmentedButtonDefaults.itemShape(0, 3),
                     onClick = { onThemeSelected(ThemeMode.SYSTEM) },
                     selected = themeSelected == ThemeMode.SYSTEM,
                     label = { Text(SettingsStr.THEME_SISTEMA) },
                 )
                 SegmentedButton(
                     modifier = Modifier.testTag(SettingsTestTags.THEME_LIGHT),
-                    shape = SegmentedButtonDefaults.itemShape(1,3),
+                    shape = SegmentedButtonDefaults.itemShape(1, 3),
                     onClick = { onThemeSelected(ThemeMode.LIGHT) },
                     selected = themeSelected == ThemeMode.LIGHT,
                     label = { Text(SettingsStr.THEME_LIGHT) },
                 )
                 SegmentedButton(
                     modifier = Modifier.testTag(SettingsTestTags.THEME_DARK),
-                    shape = SegmentedButtonDefaults.itemShape(2,3),
+                    shape = SegmentedButtonDefaults.itemShape(2, 3),
                     onClick = { onThemeSelected(ThemeMode.DARK) },
                     selected = themeSelected == ThemeMode.DARK,
                     label = { Text(SettingsStr.THEME_DARK) },
@@ -163,8 +166,12 @@ fun SettingThemeApp(modifier: Modifier = Modifier, themeSelected: ThemeMode, onT
     }
 }
 
-
-@Preview
+// Pantalla pequeña (ideal para simular el emulador problemático del CI)
+@Preview(name = "Small Screen", device = Devices.NEXUS_5)
+// Pantalla normal
+@Preview(name = "Phone", device = Devices.PIXEL_4)
+// Pantalla grande/Tablet
+@Preview(name = "Tablet", device = Devices.TABLET)
 @Composable
 private fun PreviewSuccessContent() {
     SuccessContent(

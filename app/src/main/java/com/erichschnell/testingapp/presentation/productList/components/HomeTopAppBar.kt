@@ -1,6 +1,5 @@
 package com.erichschnell.testingapp.presentation.productList.components
 
-import android.R.attr.onClick
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
@@ -31,62 +30,66 @@ fun HomeTopAppBar(
     onFilterClick: (Boolean) -> Unit,
     onSettingsSelected: () -> Unit,
     onCartSelected: () -> Unit,
-){
+) {
     TopAppBar(
         title = { Text(CoreStr.TITLE, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            ),
         actions = {
             IconButton(
                 modifier = Modifier.testTag(CoreTestTag.SHOW_FILTERS),
-                onClick = {onFilterClick(!filtersVisible)}
+                onClick = { onFilterClick(!filtersVisible) },
             ) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
-                    contentDescription = if(filtersVisible) "Ocultar Filtros" else "Mostrar Filtros",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    contentDescription = if (filtersVisible) "Ocultar Filtros" else "Mostrar Filtros",
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
             IconButton(
                 modifier = Modifier.testTag(CoreTestTag.SETTINGS),
-                onClick = {onSettingsSelected()}
+                onClick = { onSettingsSelected() },
             ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Configuracion",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
             BadgedBox(
                 modifier = Modifier.padding(end = 8.dp),
                 badge = {
-                    if (cartItemCount > 0){
-                        val text = if(cartItemCount > 99) CoreStr.CART_SIZE_OVER_99
-                        else cartItemCount.toString()
+                    if (cartItemCount > 0) {
+                        val text =
+                            if (cartItemCount > 99) {
+                                CoreStr.CART_SIZE_OVER_99
+                            } else {
+                                cartItemCount.toString()
+                            }
                         Badge(modifier = Modifier.testTag(CoreTestTag.CART_BADGE)) {
                             Text(
                                 text,
                                 style = MaterialTheme.typography.labelSmall,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                         }
                     }
-                }
+                },
             ) {
                 IconButton(
                     modifier = Modifier.testTag(CoreTestTag.CART),
-                    onClick = {onCartSelected()}
+                    onClick = { onCartSelected() },
                 ) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = "Carrito",
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
-
                 }
             }
-        }
+        },
     )
 }

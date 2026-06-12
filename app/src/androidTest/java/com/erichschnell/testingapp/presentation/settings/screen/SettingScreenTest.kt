@@ -22,9 +22,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-
 class SettingScreenTest {
-
     @get:Rule
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
@@ -39,13 +37,13 @@ class SettingScreenTest {
                 modifier = modifier,
                 state = state,
                 onAction = onAction,
-                onBack = onBack
+                onBack = onBack,
             )
         }
     }
 
     @Test
-    fun givenDefaultSettingsState_whenRendered_thenShowsFilterAndAppearanceSection(){
+    fun givenDefaultSettingsState_whenRendered_thenShowsFilterAndAppearanceSection() {
         createSettingScreen(state = SettingUiState())
 
         composeRule.onNodeWithText(SettingsStr.TITLE).assertIsDisplayed()
@@ -70,43 +68,43 @@ class SettingScreenTest {
     }
 
     @Test
-    fun givenInStockOnlyFalse_whenRendered_thenSwitchIsOff(){
+    fun givenInStockOnlyFalse_whenRendered_thenSwitchIsOff() {
         createSettingScreen(state = SettingUiState(inStockOnly = false))
         composeRule.onNodeWithTag(SettingsTestTags.SHOW_IN_STOCK_ONLY).assertIsOff()
     }
 
     @Test
-    fun givenInStockOnlyTrue_whenRendered_thenSwitchIsTrue(){
+    fun givenInStockOnlyTrue_whenRendered_thenSwitchIsTrue() {
         createSettingScreen(state = SettingUiState(inStockOnly = true))
         composeRule.onNodeWithTag(SettingsTestTags.SHOW_IN_STOCK_ONLY).assertIsOn()
     }
 
     @Test
-    fun givenShowTaxesFalse_whenRendered_thenSwitchIsOff(){
+    fun givenShowTaxesFalse_whenRendered_thenSwitchIsOff() {
         createSettingScreen(state = SettingUiState(showTaxes = false))
         composeRule.onNodeWithTag(SettingsTestTags.SHOW_WITH_TAXES).assertIsOff()
     }
 
     @Test
-    fun givenShowTaxesTrue_whenRendered_thenSwitchIsTrue(){
+    fun givenShowTaxesTrue_whenRendered_thenSwitchIsTrue() {
         createSettingScreen(state = SettingUiState(showTaxes = true))
         composeRule.onNodeWithTag(SettingsTestTags.SHOW_WITH_TAXES).assertIsOn()
     }
 
     @Test
-    fun givenThemeModeSystem_whenRendered_thenSelectedIsSystem(){
+    fun givenThemeModeSystem_whenRendered_thenSelectedIsSystem() {
         createSettingScreen(state = SettingUiState(themeMode = ThemeMode.SYSTEM))
         composeRule.onNodeWithTag(SettingsTestTags.THEME_SYSTEM).assertIsSelected()
     }
 
     @Test
-    fun givenThemeModeLight_whenRendered_thenSelectedIsLight(){
+    fun givenThemeModeLight_whenRendered_thenSelectedIsLight() {
         createSettingScreen(state = SettingUiState(themeMode = ThemeMode.LIGHT))
         composeRule.onNodeWithTag(SettingsTestTags.THEME_LIGHT).assertIsSelected()
     }
 
     @Test
-    fun givenThemeModeDark_whenRendered_thenSelectedIsDark(){
+    fun givenThemeModeDark_whenRendered_thenSelectedIsDark() {
         createSettingScreen(state = SettingUiState(themeMode = ThemeMode.DARK))
         composeRule.onNodeWithTag(SettingsTestTags.THEME_DARK).assertIsSelected()
     }
@@ -116,47 +114,65 @@ class SettingScreenTest {
         var backClicked = false
 
         createSettingScreen(
-            onBack = { backClicked = true }
+            onBack = { backClicked = true },
         )
 
         composeRule.onNodeWithTag(CoreTestTag.TOP_APP_BAR_BACK_BUTTON).performClick()
 
-        assertTrue(backClicked)
+        composeRule.runOnIdle {
+            assertTrue(backClicked)
+        }
     }
 
     @Test
     fun givenSettingsRendered_whenClickedOnShowInStockOnly_thenInStockOnlyChanged() {
         var swtichClicked = false
 
-        createSettingScreen(onAction = { if (it is SettingUiAction.SetInStockOnly) {
-            swtichClicked = true
-        }})
+        createSettingScreen(onAction = {
+            if (it is SettingUiAction.SetInStockOnly) {
+                swtichClicked = true
+            }
+        })
 
-        composeRule.onNodeWithTag(SettingsTestTags.SHOW_IN_STOCK_ONLY).performClick()
+        composeRule
+            .onNodeWithTag(SettingsTestTags.SHOW_IN_STOCK_ONLY)
+            .assertIsDisplayed()
+            .performClick()
 
-        assertTrue(swtichClicked)
+        composeRule.runOnIdle {
+            assertTrue(swtichClicked)
+        }
     }
 
     @Test
     fun givenSettingsRendered_whenClickedShowTaxes_thenShowTaxesChanged() {
         var swtichClicked = false
 
-        createSettingScreen(onAction = { if (it is SettingUiAction.SetShowTaxes) {
-            swtichClicked = true
-        }})
+        createSettingScreen(onAction = {
+            if (it is SettingUiAction.SetShowTaxes) {
+                swtichClicked = true
+            }
+        })
 
-        composeRule.onNodeWithTag(SettingsTestTags.SHOW_WITH_TAXES).performClick()
+        composeRule
+            .onNodeWithTag(SettingsTestTags.SHOW_WITH_TAXES)
+            .assertIsDisplayed()
+            .performClick()
 
-        assertTrue(swtichClicked)
+        composeRule.runOnIdle {
+            assertTrue(swtichClicked)
+        }
     }
 
     @Test
     fun givenSettingsRendered_whenThemeModeClicked_thenThemeModeChanged() {
-        var themeSelected:ThemeMode = ThemeMode.DARK
+        var themeSelected: ThemeMode = ThemeMode.DARK
 
-        createSettingScreen(onAction = { if (it is SettingUiAction.SetThemeMode) {
-            themeSelected = it.themeMode
-        }})
+        createSettingScreen(onAction = {
+            if (it is SettingUiAction.SetThemeMode) {
+                themeSelected = it.themeMode
+            }
+        })
 
         composeRule.onNodeWithTag(SettingsTestTags.THEME_SYSTEM).performClick()
         assertEquals(ThemeMode.SYSTEM, themeSelected)
@@ -167,5 +183,4 @@ class SettingScreenTest {
         composeRule.onNodeWithTag(SettingsTestTags.THEME_DARK).performClick()
         assertEquals(ThemeMode.DARK, themeSelected)
     }
-
 }

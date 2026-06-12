@@ -5,7 +5,6 @@ import com.erichschnell.testingapp.data.remote.reponse.ProductResponse
 import com.erichschnell.testingapp.domain.models.Product
 
 fun ProductResponse.toEntity(): ProductEntity {
-
     val finalPrice = priceCents?.div(100.0) ?: 0.0
 
     return ProductEntity(
@@ -15,9 +14,8 @@ fun ProductResponse.toEntity(): ProductEntity {
         price = finalPrice,
         category = category,
         stock = stock,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
     )
-
 }
 
 fun ProductEntity.toDomain(): Product? {
@@ -30,7 +28,6 @@ fun ProductEntity.toDomain(): Product? {
         price = price,
         category = category,
         stock = stock ?: 0,
-        imageUrl = imageUrl
+        imageUrl = imageUrl,
     )
-
 }

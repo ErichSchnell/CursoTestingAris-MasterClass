@@ -1,6 +1,5 @@
 package com.erichschnell.testingapp.presentation.productList.models
 
-import android.R.attr.category
 import com.erichschnell.testingapp.domain.models.SortOption
 
 object ProductListTestTags {
@@ -10,7 +9,11 @@ object ProductListTestTags {
 
     const val FILTERS_MENU = "filters_menu"
 
+    const val PRODUCTS_LIST = "product_list_products_list"
+
     fun productListProductsWithPromotion(productId: String) = "product_list_category_product_$productId"
+
     fun productListCategory(category: String?) = "product_list_category_${category ?: "all"}"
+
     fun productListSortOption(sortOption: SortOption) = "product_list_sort_option_${sortOption.name}"
 }

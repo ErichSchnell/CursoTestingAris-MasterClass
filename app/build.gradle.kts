@@ -1,25 +1,25 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ktlint)
+    alias(libs.plugins.kover)
 }
 
 android {
     namespace = "com.erichschnell.testingapp"
     compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
+        version = release(36)
     }
 
     sourceSets {
-        getByName("test"){
+        getByName("test") {
             java.directories.add("src/sharedTest/java")
         }
-        getByName("androidTest"){
+        getByName("androidTest") {
             java.directories.add("src/sharedTest/java")
         }
     }
@@ -31,7 +31,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.erichschnell.testingapp.HiltTestrunner"
+        testInstrumentationRunner = "com.erichschnell.testingapp.HiltTestRunner"
     }
 
     buildTypes {
@@ -39,9 +39,12 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
+    }
+    testOptions {
+        animationsDisabled = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -51,9 +54,33 @@ android {
         compose = true
         buildConfig = true
     }
+    kotlin {
+        jvmToolchain(21)
+    }
+    kover {
+        reports {
+            filters {
+                excludes {
+                    classes(
+                        "*.databinding.*",
+                        "*.BuildConfig",
+                        "*Activity*",
+                        "*Screen*",
+                        "*ComposableSingletons*",
+                    )
+                }
+            }
+            verify {
+                rule {
+                    minBound(15)
+                }
+            }
+        }
+    }
 }
 
-dependencies {//Core
+dependencies {
+    // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,65 +91,58 @@ dependencies {//Core
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
 
-    //Images
+    // Images
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    //Navigation3
+    // Navigation3
     implementation(libs.navigation3.ui)
     implementation(libs.navigation3.runtime)
 
-    //Hilt
+    // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.hilt.lifecycle.viewmodel.compose)
     implementation(libs.core.ktx)
     ksp(libs.hilt.compiler.ksp)
 
-    //Room
+    // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler.ksp)
 
-    //Datastore
+    // Datastore
     implementation(libs.datastore.preferences)
 
-    //Coroutines
+    // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
-    //ViewModel
+    // ViewModel
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
-    //Retrofit
+    // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.kotlinx.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
 
-    //Serialization
+    // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    //-------------- Test ----------------------------
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockK)
-
-    //Turbine
     testImplementation(libs.turbine)
     androidTestImplementation(libs.turbine)
 
-    //MockWebServer
     testImplementation(libs.mockwebserver)
     androidTestImplementation(libs.mockwebserver)
 
-    //Hilt
     androidTestImplementation(libs.hilt.android.testing)
-
     androidTestImplementation(libs.kotlin.test)
 
-
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

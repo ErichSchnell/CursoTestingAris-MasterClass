@@ -13,25 +13,33 @@ class PromotionEntityBuilder {
     private var startAtEpoch: Long = 0
     private var endAtEpoch: Long = 1
 
-    fun withId(id: String) = apply { this.id = id}
-    fun withProductIds(productIds: String) =  apply { this.productIds = productIds}
-    fun withType(type: String) = apply { this.type = type}
-    fun withPercent(percent: Int?) = apply { this.percent = percent}
-    fun withBuyX(buyX: Int?) = apply { this.buyX = buyX}
-    fun withPayY(payY: Int?) =  apply { this.payY = payY}
-    fun withStartAtEpoch(startAtEpoch: Long) = apply { this.startAtEpoch = startAtEpoch}
-    fun withEndAtEpoch(endAtEpoch: Long) = apply { this.endAtEpoch = endAtEpoch}
+    fun withId(id: String) = apply { this.id = id }
 
-    fun build() = PromotionEntity(
-        id = id,
-        productIds = productIds,
-        type = type,
-        percent = percent,
-        buyX = buyX,
-        payY = payY,
-        startAtEpoch = startAtEpoch,
-        endAtEpoch = endAtEpoch
-    )
+    fun withProductIds(productIds: String) = apply { this.productIds = productIds }
+
+    fun withType(type: String) = apply { this.type = type }
+
+    fun withPercent(percent: Int?) = apply { this.percent = percent }
+
+    fun withBuyX(buyX: Int?) = apply { this.buyX = buyX }
+
+    fun withPayY(payY: Int?) = apply { this.payY = payY }
+
+    fun withStartAtEpoch(startAtEpoch: Long) = apply { this.startAtEpoch = startAtEpoch }
+
+    fun withEndAtEpoch(endAtEpoch: Long) = apply { this.endAtEpoch = endAtEpoch }
+
+    fun build() =
+        PromotionEntity(
+            id = id,
+            productIds = productIds,
+            type = type,
+            percent = percent,
+            buyX = buyX,
+            payY = payY,
+            startAtEpoch = startAtEpoch,
+            endAtEpoch = endAtEpoch,
+        )
 }
 
-fun promotionEntity (block: PromotionEntityBuilder.() -> Unit = {}) = PromotionEntityBuilder().apply(block).build()
+fun promotionEntity(block: PromotionEntityBuilder.() -> Unit = {}) = PromotionEntityBuilder().apply(block).build()

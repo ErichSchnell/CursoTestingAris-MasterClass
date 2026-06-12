@@ -8,23 +8,27 @@ import com.erichschnell.testingapp.data.local.database.MiniMarketDataBase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class CartItemDaoTest {
-
     private lateinit var database: MiniMarketDataBase
     private lateinit var dao: CartItemDao
 
     @Before
     fun setUp() {
-        database = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
-            MiniMarketDataBase::class.java
-        ).build()
+        database =
+            Room
+                .inMemoryDatabaseBuilder(
+                    ApplicationProvider.getApplicationContext(),
+                    MiniMarketDataBase::class.java,
+                ).build()
         dao = database.cartItemDao()
     }
 
@@ -44,60 +48,74 @@ class CartItemDaoTest {
      */
 
     @Test
-    fun givenEmptyCart_whenGetAllCartItems_thenEmitsEmptyList() = runTest {
-        val cartItems = dao.getAllCartItems().first()
-        assertTrue(cartItems.isEmpty())
-    }
+    fun givenEmptyCart_whenGetAllCartItems_thenEmitsEmptyList() =
+        runTest {
+            val cartItems = dao.getAllCartItems().first()
+            assertTrue(cartItems.isEmpty())
+        }
 
     @Test
-    fun givenInsertCartItem_whenGetAllCartItems_thenEmitsListWithCartItem() = runTest {
-        val cartItem = cartItemEntity { withProductId("ct1-id") }
-        dao.insertCartItem(cartItem)
+    fun givenInsertCartItem_whenGetAllCartItems_thenEmitsListWithCartItem() =
+        runTest {
+            val cartItem = cartItemEntity { withProductId("ct1-id") }
+            dao.insertCartItem(cartItem)
 
-        val cartItems = dao.getAllCartItems().first()
-        assertEquals(1,cartItems.size)
-        assertEquals(cartItem.productId, cartItems[0].productId)
-    }
-
-    @Test
-    fun givenInsertCartItem_whenGetCartItemById_thenEmitsTheCartItem() = runTest {
-        val cartItem = cartItemEntity { withProductId("ct1-id") }
-        dao.insertCartItem(cartItem)
-
-        val cartItemsEntity = dao.getCartItemById(cartItem.productId)
-        assertNotNull(cartItemsEntity)
-        assertEquals(cartItem.productId, cartItemsEntity?.productId)
-    }
+            val cartItems = dao.getAllCartItems().first()
+            assertEquals(1, cartItems.size)
+            assertEquals(cartItem.productId, cartItems[0].productId)
+        }
 
     @Test
-    fun givenProductIdNotExistent_whenGetCartItemById_thenEmitsNull() = runTest {
-        val cartItemsEntity = dao.getCartItemById("some-id")
-        assertNull(cartItemsEntity)
-    }
+    fun givenInsertCartItem_whenGetCartItemById_thenEmitsTheCartItem() =
+        runTest {
+            val cartItem = cartItemEntity { withProductId("ct1-id") }
+            dao.insertCartItem(cartItem)
+
+            val cartItemsEntity = dao.getCartItemById(cartItem.productId)
+            assertNotNull(cartItemsEntity)
+            assertEquals(cartItem.productId, cartItemsEntity?.productId)
+        }
 
     @Test
-    fun givenACartItemExistent_whenInsertCartItem_thenUpdateCartItem() = runTest {
-        val cartItem = cartItemEntity { withProductId("ct1-id"); withQuantity(5) }
-        dao.insertCartItem(cartItem)
-
-        val newCartItem = cartItem.copy(quantity = 2)
-        dao.insertCartItem(newCartItem)
-
-        val cartItemEntity = dao.getAllCartItems().first()
-        assertEquals(1,cartItemEntity.size)
-        assertEquals(cartItem.productId, cartItemEntity[0].productId)
-        assertEquals(newCartItem.quantity, cartItemEntity[0].quantity)
-    }
+    fun givenProductIdNotExistent_whenGetCartItemById_thenEmitsNull() =
+        runTest {
+            val cartItemsEntity = dao.getCartItemById("some-id")
+            assertNull(cartItemsEntity)
+        }
 
     @Test
-    fun givenListOfCartItemExistent_whenClearCart_thenCleanDatabase() = runTest {
-        val cartItem = cartItemEntity { withProductId("ct1-id"); withQuantity(5) }
-        dao.insertCartItem(cartItem)
+    fun givenACartItemExistent_whenInsertCartItem_thenUpdateCartItem() =
+        runTest {
+            val cartItem =
+                cartItemEntity {
+                    withProductId("ct1-id")
+                    withQuantity(5)
+                }
+            dao.insertCartItem(cartItem)
 
-        dao.clearCart()
+            val newCartItem = cartItem.copy(quantity = 2)
+            dao.insertCartItem(newCartItem)
 
-        val cartItemsEntity = dao.getAllCartItems().first()
+            val cartItemEntity = dao.getAllCartItems().first()
+            assertEquals(1, cartItemEntity.size)
+            assertEquals(cartItem.productId, cartItemEntity[0].productId)
+            assertEquals(newCartItem.quantity, cartItemEntity[0].quantity)
+        }
 
-        assertTrue(cartItemsEntity.isEmpty())
-    }
+    @Test
+    fun givenListOfCartItemExistent_whenClearCart_thenCleanDatabase() =
+        runTest {
+            val cartItem =
+                cartItemEntity {
+                    withProductId("ct1-id")
+                    withQuantity(5)
+                }
+            dao.insertCartItem(cartItem)
+
+            dao.clearCart()
+
+            val cartItemsEntity = dao.getAllCartItems().first()
+
+            assertTrue(cartItemsEntity.isEmpty())
+        }
 }

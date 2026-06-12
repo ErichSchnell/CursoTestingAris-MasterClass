@@ -18,12 +18,11 @@ import com.erichschnell.testingapp.domain.usecases.UpdateCartItemUseCase
 import com.erichschnell.testingapp.domain.util.Clock
 import com.erichschnell.testingapp.presentation.cart.model.CartAction
 import com.erichschnell.testingapp.presentation.cart.model.CartUiState
-import com.erichschnell.testingapp.presentation.productList.models.ProductListUiState
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,7 +32,6 @@ import javax.inject.Inject
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class CartViewModelIntegrationTest {
-
     private companion object {
         const val PRODUCT_ID = "p2"
         const val INITIAL_QUANTITY = 1
@@ -54,12 +52,16 @@ class CartViewModelIntegrationTest {
 
     @Inject
     lateinit var getCartSummaryUseCase: GetCartSummaryUseCase
+
     @Inject
     lateinit var productRepository: ProductRepository
+
     @Inject
     lateinit var promotionRepository: PromotionRepository
+
     @Inject
     lateinit var getPromotionForProductUseCase: GetPromotionForProduct
+
     @Inject
     lateinit var clock: Clock
 
@@ -69,19 +71,20 @@ class CartViewModelIntegrationTest {
     @Inject
     lateinit var getCartItemsWithPromotionsUseCase: GetCartItemsWithPromotionsUseCase
 
-
     @Before
-    fun setUp() = runTest {
-        mockWebServer.server.dispatcher = MiniMarketApiDispatcher(
-            productJson = "product_list_default.json".asAsset()
-        )
-        hiltRule.inject()
+    fun setUp() =
+        runTest {
+            mockWebServer.server.dispatcher =
+                MiniMarketApiDispatcher(
+                    productJson = "product_list_default.json".asAsset(),
+                )
+            hiltRule.inject()
 
-        cartRepository.clearCart()
+            cartRepository.clearCart()
 
-        productRepository.refreshProduct()
-        promotionRepository.refreshPromotions()
-    }
+            productRepository.refreshProduct()
+            promotionRepository.refreshPromotions()
+        }
 
     @After
     fun tearDown() {
@@ -89,139 +92,168 @@ class CartViewModelIntegrationTest {
     }
 
     @Test
-    fun givenCartWithItems_whenViewModelCollectsUiState_thenSuccessWithSummary() = runTest {
-        cartRepository.addToCart(PRODUCT_ID, UPDATE_QUANTITY)
+    fun givenCartWithItems_whenViewModelCollectsUiState_thenSuccessWithSummary() =
+        runTest {
+            cartRepository.addToCart(PRODUCT_ID, UPDATE_QUANTITY)
 
-        val viewModel = createViewModel()
+            val viewModel = createViewModel()
 
-        viewModel.uiState.test {
-            val result = awaitSuccessMatching {
-                summary.finalTotal > 0 &&
-                        cartItems.isNotEmpty()
+            viewModel.uiState.test {
+                val result =
+                    awaitSuccessMatching {
+                        summary.finalTotal > 0 &&
+                            cartItems.isNotEmpty()
+                    }
+
+                assertTrue(result.cartItems.size == 1)
+                assertTrue(result.summary.finalTotal > 0)
+
+                cancelAndIgnoreRemainingEvents()
             }
-
-            assertTrue(result.cartItems.size == 1)
-            assertTrue(result.summary.finalTotal > 0)
-
-            cancelAndIgnoreRemainingEvents()
         }
-
-    }
 
     @Test
-    fun givenSingleProduct_whenIncreaseQuantity_thenCartHasIncreasedQuantity() = runTest {
-        cartRepository.addToCart(PRODUCT_ID, INITIAL_QUANTITY)
+    fun givenSingleProduct_whenIncreaseQuantity_thenCartHasIncreasedQuantity() =
+        runTest {
+            cartRepository.addToCart(PRODUCT_ID, INITIAL_QUANTITY)
 
-        val viewModel = createViewModel()
+            val viewModel = createViewModel()
 
-        viewModel.uiState.test {
-            val result = awaitSuccessMatching {
-                cartItems.any {
-                    it.cartItem.productId == PRODUCT_ID &&
-                            it.cartItem.quantity == INITIAL_QUANTITY
-                }
+            viewModel.uiState.test {
+                val result =
+                    awaitSuccessMatching {
+                        cartItems.any {
+                            it.cartItem.productId == PRODUCT_ID &&
+                                it.cartItem.quantity == INITIAL_QUANTITY
+                        }
+                    }
+                assertTrue(result.cartItems.size == 1)
+                assertTrue(
+                    result.cartItems
+                        .first()
+                        .cartItem.quantity == INITIAL_QUANTITY,
+                )
+
+                viewModel.onAction(CartAction.IncreaseQuantity(PRODUCT_ID, INITIAL_QUANTITY))
+
+                val newResult =
+                    awaitSuccessMatching {
+                        cartItems.any {
+                            it.cartItem.productId == PRODUCT_ID &&
+                                it.cartItem.quantity == INITIAL_QUANTITY + INITIAL_QUANTITY
+                        }
+                    }
+
+                assertTrue(newResult.cartItems.size == 1)
+                assertTrue(
+                    newResult.cartItems
+                        .first()
+                        .cartItem.quantity == INITIAL_QUANTITY + 1,
+                )
+
+                cancelAndIgnoreRemainingEvents()
             }
-            assertTrue(result.cartItems.size == 1)
-            assertTrue(result.cartItems.first().cartItem.quantity == INITIAL_QUANTITY)
-
-            viewModel.onAction(CartAction.IncreaseQuantity(PRODUCT_ID, INITIAL_QUANTITY))
-
-            val newResult = awaitSuccessMatching {
-                cartItems.any {
-                    it.cartItem.productId == PRODUCT_ID &&
-                            it.cartItem.quantity == INITIAL_QUANTITY + INITIAL_QUANTITY
-                }
-            }
-
-            assertTrue(newResult.cartItems.size == 1)
-            assertTrue(newResult.cartItems.first().cartItem.quantity == INITIAL_QUANTITY + 1)
-
-            cancelAndIgnoreRemainingEvents()
         }
-
-    }
 
     @Test
-    fun givenSingleProduct_whenDecreaseQuantity_thenCartHasDecreasedQuantity() = runTest {
-        cartRepository.addToCart(PRODUCT_ID, UPDATE_QUANTITY)
+    fun givenSingleProduct_whenDecreaseQuantity_thenCartHasDecreasedQuantity() =
+        runTest {
+            cartRepository.addToCart(PRODUCT_ID, UPDATE_QUANTITY)
 
-        val viewModel = createViewModel()
+            val viewModel = createViewModel()
 
-        viewModel.uiState.test {
-            val result = awaitSuccessMatching {
-                cartItems.any {
-                    it.cartItem.productId == PRODUCT_ID &&
-                            it.cartItem.quantity == UPDATE_QUANTITY
-                }
+            viewModel.uiState.test {
+                val result =
+                    awaitSuccessMatching {
+                        cartItems.any {
+                            it.cartItem.productId == PRODUCT_ID &&
+                                it.cartItem.quantity == UPDATE_QUANTITY
+                        }
+                    }
+                assertTrue(result.cartItems.size == 1)
+                assertTrue(
+                    result.cartItems
+                        .first()
+                        .cartItem.quantity == UPDATE_QUANTITY,
+                )
+
+                viewModel.onAction(CartAction.DecreaseQuantity(PRODUCT_ID, UPDATE_QUANTITY))
+
+                val newResult =
+                    awaitSuccessMatching {
+                        cartItems.any {
+                            it.cartItem.productId == PRODUCT_ID &&
+                                it.cartItem.quantity == INITIAL_QUANTITY
+                        }
+                    }
+
+                assertTrue(newResult.cartItems.size == 1)
+                assertTrue(
+                    newResult.cartItems
+                        .first()
+                        .cartItem.quantity == INITIAL_QUANTITY,
+                )
+
+                cancelAndIgnoreRemainingEvents()
             }
-            assertTrue(result.cartItems.size == 1)
-            assertTrue(result.cartItems.first().cartItem.quantity == UPDATE_QUANTITY)
-
-            viewModel.onAction(CartAction.DecreaseQuantity(PRODUCT_ID, UPDATE_QUANTITY))
-
-            val newResult = awaitSuccessMatching {
-                cartItems.any {
-                    it.cartItem.productId == PRODUCT_ID &&
-                            it.cartItem.quantity == INITIAL_QUANTITY
-                }
-            }
-
-            assertTrue(newResult.cartItems.size == 1)
-            assertTrue(newResult.cartItems.first().cartItem.quantity == INITIAL_QUANTITY)
-
-            cancelAndIgnoreRemainingEvents()
         }
-
-    }
 
     @Test
-    fun givenSingleProduct_whenDecreaseQuantityAZero_thenProductIsRemovedFromCart() = runTest {
-        cartRepository.addToCart(PRODUCT_ID, INITIAL_QUANTITY)
+    fun givenSingleProduct_whenDecreaseQuantityAZero_thenProductIsRemovedFromCart() =
+        runTest {
+            cartRepository.addToCart(PRODUCT_ID, INITIAL_QUANTITY)
 
-        val viewModel = createViewModel()
+            val viewModel = createViewModel()
 
-        viewModel.uiState.test {
-            val result = awaitSuccessMatching {
-                cartItems.any {
-                    it.cartItem.productId == PRODUCT_ID &&
-                            it.cartItem.quantity == INITIAL_QUANTITY
-                }
+            viewModel.uiState.test {
+                val result =
+                    awaitSuccessMatching {
+                        cartItems.any {
+                            it.cartItem.productId == PRODUCT_ID &&
+                                it.cartItem.quantity == INITIAL_QUANTITY
+                        }
+                    }
+                assertTrue(result.cartItems.size == 1)
+                assertTrue(
+                    result.cartItems
+                        .first()
+                        .cartItem.quantity == INITIAL_QUANTITY,
+                )
+
+                viewModel.onAction(CartAction.DecreaseQuantity(PRODUCT_ID, INITIAL_QUANTITY))
+
+                val newResult =
+                    awaitSuccessMatching {
+                        cartItems.isEmpty() && summary.finalTotal == 0.0
+                    }
+
+                assertTrue(newResult.cartItems.isEmpty())
+
+                cancelAndIgnoreRemainingEvents()
             }
-            assertTrue(result.cartItems.size == 1)
-            assertTrue(result.cartItems.first().cartItem.quantity == INITIAL_QUANTITY)
-
-            viewModel.onAction(CartAction.DecreaseQuantity(PRODUCT_ID, INITIAL_QUANTITY))
-
-            val newResult = awaitSuccessMatching {
-                cartItems.isEmpty() && summary.finalTotal == 0.0
-            }
-
-            assertTrue(newResult.cartItems.isEmpty())
-
-            cancelAndIgnoreRemainingEvents()
         }
 
-    }
-
-    private fun createViewModel(): CartViewModel {
-        return CartViewModel(
+    private fun createViewModel(): CartViewModel =
+        CartViewModel(
             cartRepository = cartRepository,
             getCartSummaryUseCase = getCartSummaryUseCase,
             updateCartItemUseCase = updateCartItemUseCase,
-            getCartItemsWithPromotionsUseCase = getCartItemsWithPromotionsUseCase
+            getCartItemsWithPromotionsUseCase = getCartItemsWithPromotionsUseCase,
         )
-    }
 
     private suspend fun ReceiveTurbine<CartUiState>.awaitSuccessMatching(
-        predicate: CartUiState.Success.() -> Boolean
+        predicate: CartUiState.Success.() -> Boolean,
     ): CartUiState.Success {
-        while ( true ) {
-            when(val item = awaitItem()) {
-                is CartUiState.Success -> { if (predicate(item)) { return item } }
+        while (true) {
+            when (val item = awaitItem()) {
+                is CartUiState.Success -> {
+                    if (predicate(item)) {
+                        return item
+                    }
+                }
                 is CartUiState.Error -> error("Unexpected error: ${item.message}")
                 is CartUiState.Loading -> Unit
             }
         }
     }
-
 }

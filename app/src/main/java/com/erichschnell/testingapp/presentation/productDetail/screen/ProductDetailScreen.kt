@@ -17,7 +17,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.erichschnell.testingapp.domain.models.Product
 import com.erichschnell.testingapp.domain.models.ProductWithPromotion
 import com.erichschnell.testingapp.presentation.core.components.MarketTopAppBar
@@ -38,7 +37,7 @@ fun ProductDetailScreen(
 
     LaunchedEffect(Unit) {
         viewModel.events.collect {
-            when(it){
+            when (it) {
                 ProductDetailEvent.Toast.InsufficientStock -> {
                     snackbarHostState.showSnackbar("No hay suficiente stock")
                 }
@@ -59,9 +58,8 @@ fun ProductDetailScreen(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
         onBack = onBack,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
     )
-
 }
 
 @Composable
@@ -69,45 +67,44 @@ fun ProductDetailScreenContent(
     uiState: ProductDetailUiState,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onBack: () -> Unit,
-    onAction: (ProductDetailUiAction) -> Unit
+    onAction: (ProductDetailUiAction) -> Unit,
 ) {
     Scaffold(
         topBar = {
             MarketTopAppBar(
                 title = uiState.item?.product?.name ?: "",
-                onBackSelected = onBack
+                onBackSelected = onBack,
             )
         },
         bottomBar = {
             AddToCartButton(
                 product = uiState.item?.product,
                 isLoading = uiState.isLoading,
-                addToCart = { onAction(ProductDetailUiAction.AddToCart) }
+                addToCart = { onAction(ProductDetailUiAction.AddToCart) },
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddings ->
         if (uiState.isLoading) {
             LoadingContent()
         } else {
             ProductDetailSuccessContent(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddings)
-                    .padding(16.dp),
-                state = uiState
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddings)
+                        .padding(16.dp),
+                state = uiState,
             )
         }
     }
 }
 
-
-
 @Composable
 private fun LoadingContent() {
     Box(
         Modifier.fillMaxSize().testTag(ProductDetailTestTags.LOADING),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator()
     }
@@ -116,22 +113,24 @@ private fun LoadingContent() {
 @Preview
 @Composable
 private fun PreviewProductDetailScreenSuccess() {
-    val item =  ProductWithPromotion(
-        product = Product(
-            id = "id-bread",
-            name = "Pan",
-            description = "Pan de casa",
-            price = 10.2,
-            category = "Panaderia",
-            stock = 8,
-            imageUrl = null
-        ),
-        promotion = null
-    )
+    val item =
+        ProductWithPromotion(
+            product =
+                Product(
+                    id = "id-bread",
+                    name = "Pan",
+                    description = "Pan de casa",
+                    price = 10.2,
+                    category = "Panaderia",
+                    stock = 8,
+                    imageUrl = null,
+                ),
+            promotion = null,
+        )
     ProductDetailScreenContent(
         uiState = ProductDetailUiState(item = item, isLoading = false),
-        onBack = {  },
-        onAction = {  }
+        onBack = { },
+        onAction = { },
     )
 }
 
@@ -140,7 +139,7 @@ private fun PreviewProductDetailScreenSuccess() {
 private fun PreviewProductDetailScreenLoading() {
     ProductDetailScreenContent(
         uiState = ProductDetailUiState(),
-        onBack = {  },
-        onAction = {  }
+        onBack = { },
+        onAction = { },
     )
 }

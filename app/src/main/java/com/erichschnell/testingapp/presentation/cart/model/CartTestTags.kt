@@ -9,11 +9,15 @@ object CartTestTags {
 
     const val EMPTY_CART = "cart_empty"
 
+    const val PRODUCTS_LIST = "cart_product_list"
+
     fun cartItem(id: String) = "cart_item_$id"
+
     fun addQuantity(productId: String) = "cart_quantity_add_$productId"
+
     fun subtractQuantity(productId: String) = "cart_quantity_subtract_$productId"
+
     fun removeItem(productId: String) = "cart_remove_item_$productId"
 
     const val ERROR_RETRY = "cart_error_retry"
-
 }
