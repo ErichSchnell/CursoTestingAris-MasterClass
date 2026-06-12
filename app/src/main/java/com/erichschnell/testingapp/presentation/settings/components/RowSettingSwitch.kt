@@ -33,7 +33,7 @@ fun RowSettingSwitch(
         ) {
             Column(
                 modifier = Modifier.weight(1f).padding(end = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Text(
                     title,

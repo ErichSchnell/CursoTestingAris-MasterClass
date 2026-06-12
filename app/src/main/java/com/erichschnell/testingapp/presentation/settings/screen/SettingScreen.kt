@@ -165,6 +165,7 @@ fun SettingThemeApp(
         }
     }
 }
+
 // Pantalla pequeña (ideal para simular el emulador problemático del CI)
 @Preview(name = "Small Screen", device = Devices.NEXUS_5)
 // Pantalla normal
